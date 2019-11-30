@@ -1,0 +1,35 @@
+{
+  "name": "inception-ui",
+  "version": "1.0.3",
+  "description": "react ui component",
+  "main": "./build/index.js",
+  "browser": "./build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel test/index.html --open",
+    "prepublish": "tsc && npm version patch",
+    "publish": "npm publish"
+  },
+  "keywords": [],
+  "author": "jaehun kim <kjaehun6546@gmail.com>",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "repository": "https://github.com/inceptionJh/inception-ui",
+  "homepage": "https://github.com/inceptionJh/inception-ui",
+  "bugs": "https://github.com/inceptionJh/inception-ui/issues",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.12.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.13",
+    "@types/react-dom": "^16.9.4",
+    "parcel-bundler": "^1.12.4",
+    "react-dom": "^16.12.0",
+    "typescript": "^3.7.2"
+  }
+}
