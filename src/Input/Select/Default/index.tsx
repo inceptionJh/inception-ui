@@ -7,7 +7,6 @@ import ScrollBar from "../../../ScrollBar";
 export interface IDefaultSelectItemProps {
   className?: string;
   label: string;
-  value: string;
 }
 
 const _Item: React.FunctionComponent<IDefaultSelectItemProps> = (props) => {
@@ -15,9 +14,9 @@ const _Item: React.FunctionComponent<IDefaultSelectItemProps> = (props) => {
 
   return (
     <li
-      {...{ _select: `${props.value === groupContext.value}` }}
       className={props.className}
-      onClick={() => groupContext.onChange(props.value)}
+      data-select={`${groupContext.label === props.label}`}
+      onClick={() => groupContext.onLabelChange(props.label)}
     >
       {props.label}
     </li>
@@ -39,7 +38,7 @@ const Item = styled(_Item)`
     background: rgba(0,0,0, 0.05);
   }
 
-  &[_select=true] {
+  &[data-select=true] {
     background: rgba(0,0,0, 0.08);
   }
 `;
@@ -49,52 +48,45 @@ const GroupContext = React.createContext({} as IDefaultSelectGroupProps);
 export interface IDefaultSelectGroupProps {
   className?: string;
   placehold?: string;
-  value: string | null;
-  onChange: (value: string) => void;
+  label: string | null;
+  onLabelChange: (value: string) => void;
 }
 
 const _Group: React.FunctionComponent<IDefaultSelectGroupProps> = (props) => {
-  const [selectedLabel, setSelectedLabel] = React.useState<string | null>(null);
-  const [selecting, setSelecting] = React.useState(false);
-
-  const ref = React.useRef() as React.RefObject<HTMLDivElement>;
+  const [spanFocus, setSpanFocus] = React.useState(false);
+  const [ulFocus, setUlFocus] = React.useState(false);
+  const [selecting, setSelecting] = React.useState([spanFocus, ulFocus].some((v) => v));
 
   React.useEffect(() => {
-    const ulEl = ref.current?.querySelector("ul")!;
-    const selectedEl = Array.from(ulEl.children).find((child) => child.getAttribute("_select") === "true");
-    setSelectedLabel(selectedEl?.textContent ?? null);
-  }, [props.value]);
+    setSelecting([spanFocus, ulFocus].some((v) => v));
+  }, [spanFocus, ulFocus]);
 
   React.useEffect(() => {
     setSelecting(false);
-  }, [props.value]);
-
-  React.useEffect(() => {
-    if (!selecting) ref.current?.blur();
-  }, [selecting]);
+  }, [props.label]);
 
   return (
     <GroupContext.Provider value={props}>
       <div
-        ref={ref}
-        {...{ _selecting: `${selecting}` }}
         className={props.className}
-        tabIndex={0}
-        onBlur={() => setSelecting(false)}
-        onMouseDown={(e) => e.preventDefault()}
-        onMouseUp={(e) => e.currentTarget.focus()}
-        onClick={() => setSelecting(!selecting)}
+        data-selecting={`${selecting}`}
       >
         <span
-          {...{
-            _label: `${!!selectedLabel}`,
-            _placehold: `${!!props.placehold}`,
-          }}
+          tabIndex={1}
+          onBlur={() => setSpanFocus(false)}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => setSpanFocus(!spanFocus)}
+          onMouseUp={(e) => e.currentTarget.focus()}
         >
-          {selectedLabel ?? props.placehold ?? null}
+          {props.label || props.placehold}
         </span>
 
-        <ul onClick={(e) => e.stopPropagation()}>
+        <ul
+          tabIndex={2}
+          onFocus={() => setUlFocus(true)}
+          onBlur={() => setUlFocus(false)}
+          onClick={(e) => e.stopPropagation()}
+        >
           {props.children}
 
           <ScrollBar.Default delay={200} />
@@ -111,13 +103,14 @@ const Group = styled(_Group)`
   width: 180px;
   height: 32px;
   border-radius: 4px;
+  font-size: 14px;
+
+  outline: none;
 
   color: #444;
   font-weight: bold;
 
   box-shadow: 0px 2px 10px 3px rgba(0,0,0, 0.2);
-
-  outline: none;
 
   border: none;
   -webkit-appearance: none;
@@ -125,29 +118,30 @@ const Group = styled(_Group)`
     display: none;
   }
 
-  &[_selecting=true] > span { color: rgba(0,0,0, 0.2) !important; }
-
   & > span {
     display: flex;
     align-items: center;
 
+    outline: none;
     cursor: pointer;
+
+    color: ${(props) => props.label ? "" : "#aaa"};
 
     width: 100%;
     height: 100%;
 
     padding-left: 10px;
-
-    &[_placehold=true] { color: rgba(0,0,0, 0.2); }
-    &[_label=true] { color: #555; }
   }
 
   & > ul {
     position: absolute;
+    z-index: 10000;
     left: 0;
     bottom: -5px;
     transform: translate(0, 100%);
     transition: max-height 0.2s;
+
+    outline: none;
 
     overflow-y: auto;
     -ms-overflow-style: none;
@@ -161,10 +155,12 @@ const Group = styled(_Group)`
     max-height: 0;
     border-radius: 4px;
 
+    background: #fff;
+
     box-shadow: 0px 5px 5px -3px rgba(0,0,0, 0.2), 0px 8px 10px 1px rgba(0,0,0, 0.14), 0px 3px 14px 2px rgba(0,0,0, 0.12);
   }
 
-  &[_selecting=true] > ul {
+  &[data-selecting=true] > ul {
     max-height: 200px;
   }
 `;
