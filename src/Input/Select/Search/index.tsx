@@ -15,7 +15,8 @@ const _Item: React.FunctionComponent<IDefaultSelectItemProps> = (props) => {
   return (
     <li
       className={props.className}
-      data-select={`${groupContext.label === props.label}`}
+      data-select={props.label === groupContext.label}
+      hidden={props.label.indexOf(groupContext.search) === -1}
       onClick={() => groupContext.onLabelChange(props.label)}
     >
       {props.label}
@@ -31,8 +32,12 @@ const Item = styled(_Item)`
   cursor: pointer;
 
   height: 32px;
-  padding-left: 10px;
+  padding: 0 10px;
   outline: none;
+
+  &[hidden] {
+    display: none;
+  }
 
   &:hover {
     background: rgba(0,0,0, 0.05);
@@ -50,42 +55,42 @@ export interface IDefaultSelectGroupProps {
   placehold?: string;
   label: string | null;
   onLabelChange: (value: string) => void;
+  search: string;
+  onSearchChange: (search: string) => void;
 }
 
 const _Group: React.FunctionComponent<IDefaultSelectGroupProps> = (props) => {
-  const [spanFocus, setSpanFocus] = React.useState(false);
+  const [inputFocus, setInputFocus] = React.useState(false);
   const [ulFocus, setUlFocus] = React.useState(false);
-  const [selecting, setSelecting] = React.useState([spanFocus, ulFocus].some((v) => v));
+  const [selecting, setSelecting] = React.useState([inputFocus, ulFocus].some((v) => v));
 
   React.useEffect(() => {
-    setSelecting([spanFocus, ulFocus].some((v) => v));
-  }, [spanFocus, ulFocus]);
+    setSelecting([inputFocus, ulFocus].some((v) => v));
+  }, [inputFocus, ulFocus]);
 
   React.useEffect(() => {
+    props.onSearchChange("");
     setSelecting(false);
   }, [props.label]);
 
   return (
     <GroupContext.Provider value={props}>
-      <div
-        className={props.className}
-        data-selecting={`${selecting}`}
-      >
-        <span
-          tabIndex={1}
-          onBlur={() => setSpanFocus(false)}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => setSpanFocus(!spanFocus)}
-          onMouseUp={(e) => e.currentTarget.focus()}
-        >
-          {props.label || props.placehold}
-        </span>
+      <div className={props.className} data-selecting={`${selecting}`}>
+        <input
+          placeholder={props.label ?? props.placehold}
+          value={inputFocus
+            ? props.search || ""
+            : props.label || ""
+          }
+          onChange={(e) => props.onSearchChange(e.target.value)}
+          onFocus={() => setInputFocus(true)}
+          onBlur={() => setInputFocus(false)}
+        />
 
         <ul
-          tabIndex={2}
+          tabIndex={0}
           onFocus={() => setUlFocus(true)}
           onBlur={() => setUlFocus(false)}
-          onClick={(e) => e.stopPropagation()}
         >
           {props.children}
 
@@ -103,14 +108,13 @@ const Group = styled(_Group)`
   width: 180px;
   height: 32px;
   border-radius: 4px;
-  font-size: 14px;
-
-  outline: none;
 
   color: #444;
   font-weight: bold;
 
   box-shadow: 0px 2px 10px 3px rgba(0,0,0, 0.2);
+
+  outline: none;
 
   border: none;
   -webkit-appearance: none;
@@ -118,20 +122,27 @@ const Group = styled(_Group)`
     display: none;
   }
 
-  & > span {
+  & > input {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
 
-    outline: none;
-    cursor: pointer;
-
-    color: ${(props) => props.label ? "" : "#aaa"};
+    font-weight: bold;
 
     width: 100%;
     height: 100%;
+    padding: 0 10px;
+    border-radius: 4px;
 
-    padding-left: 10px;
+    border: none;
+    outline: none;
+
+    &::placeholder {
+      color: #aaa;
+    }
   }
+
+  &[data-selecting=true] > ul { max-height: 200px; }
 
   & > ul {
     position: absolute;
@@ -142,7 +153,6 @@ const Group = styled(_Group)`
     transition: max-height 0.2s;
 
     outline: none;
-
     overflow-y: auto;
     -ms-overflow-style: none;
     &::-webkit-scrollbar {
@@ -159,15 +169,11 @@ const Group = styled(_Group)`
 
     box-shadow: 0px 5px 5px -3px rgba(0,0,0, 0.2), 0px 8px 10px 1px rgba(0,0,0, 0.14), 0px 3px 14px 2px rgba(0,0,0, 0.12);
   }
-
-  &[data-selecting=true] > ul {
-    max-height: 200px;
-  }
 `;
 
-const DefaultSelect = {
+const SearchSelect = {
   Group,
   Item,
 };
 
-export default DefaultSelect;
+export default SearchSelect;

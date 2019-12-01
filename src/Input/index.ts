@@ -1,11 +1,9 @@
 import DefaultInput from "./Default";
-import DefaultSelect from "./Select/Default";
+import Select from "./Select";
 
 const Input = {
   Default: DefaultInput,
-  Select: {
-    Default: DefaultSelect,
-  },
+  Select,
 };
 
 export default Input;
