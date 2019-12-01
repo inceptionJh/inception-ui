@@ -1,14 +1,12 @@
 {
   "name": "inception-ui",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "react ui component",
   "main": "./build/index.js",
   "browser": "./build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel test/index.html --open",
-    "prepublish": "tsc && npm version patch",
-    "publish": "npm publish"
+    "start": "parcel test/index.html --open"
   },
   "keywords": [],
   "author": "jaehun kim <kjaehun6546@gmail.com>",
