@@ -1,6 +1,6 @@
 {
   "name": "inception-ui",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "react ui component",
   "main": "./build/index.js",
   "browser": "./build/index.js",
@@ -21,10 +21,12 @@
   "bugs": "https://github.com/inceptionJh/inception-ui/issues",
   "license": "ISC",
   "dependencies": {
+    "d3": "^5.14.2",
     "react": "^16.12.0",
     "styled-components": "^4.4.1"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.2",
     "@types/react": "^16.9.13",
     "@types/react-dom": "^16.9.4",
     "@types/styled-components": "^4.4.0",
