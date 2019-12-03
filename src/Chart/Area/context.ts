@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { TAreaContext } from "./type";
+import { IAreaContext } from "./type";
 
-const AreaContext = React.createContext({} as TAreaContext);
+const AreaContext = React.createContext({} as IAreaContext);
 
 export default AreaContext;

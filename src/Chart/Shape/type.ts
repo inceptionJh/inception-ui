@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-export type TShapeContext = {
+export interface IShapeContext {
   type: "scatter" | "bar" | "line";
   xKey: string;
   yKey: string;
@@ -11,4 +11,4 @@ export type TShapeContext = {
   yScale: d3.ScaleLinear<number, number>;
   onMouseEnter?: (v: any, i: number, g: any[]) => void;
   onMouseLeave?: (v: any, i: number, g: any[]) => void;
-};
+}
