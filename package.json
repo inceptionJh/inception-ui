@@ -21,6 +21,10 @@
   "bugs": "https://github.com/inceptionJh/inception-ui/issues",
   "license": "ISC",
   "dependencies": {},
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
+  },
   "devDependencies": {
     "@types/d3": "^5.7.2",
     "@types/react": "^16.9.13",
