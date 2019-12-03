@@ -1,4 +1,4 @@
-export interface ILineProps {
+export interface IStepLineProps {
   className?: string;
   data: any[];
   xKey: string;

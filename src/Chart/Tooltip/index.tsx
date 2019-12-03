@@ -13,11 +13,11 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
   const shapeCtx = React.useContext(ShapeContext);
 
-  const [nearData, setNearData] = React.useState(areaCtx.data[0]);
+  const [nearData, setNearData] = React.useState(shapeCtx.data[0]);
   const [hover, setHover] = React.useState(false);
 
   const mouseMoveHandler = React.useCallback((e: MouseEvent) => {
-    const result = areaCtx.data.reduce((accu: any, curr: any) => {
+    const result = shapeCtx.data.reduce((accu: any, curr: any) => {
       const mouseX = shapeCtx.xScale.invert(e.offsetX).valueOf();
       const mouseY = shapeCtx.yScale.invert(e.offsetY).valueOf();
 
@@ -29,7 +29,7 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
 
       if (xDiffAccu === xDiffCurr) return yDiffAccu <= yDiffCurr ? accu : curr;
       return xDiffAccu < xDiffCurr ? accu : curr;
-    }, areaCtx.data[0]);
+    }, shapeCtx.data[0]);
     setNearData(result);
   }, []);
 

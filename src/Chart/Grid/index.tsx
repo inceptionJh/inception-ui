@@ -15,13 +15,13 @@ const Grid: React.FunctionComponent<IGridProps> = (props) => {
 
   const attr = React.useMemo(() => {
     return {
-      xTicks: props.xTicks ?? areaCtx.data.map((v: any) => v[shapeCtx.xKey]) as number[],
+      xTicks: props.xTicks ?? shapeCtx.data.map((v: any) => v[shapeCtx.xKey]) as number[],
       xLine: props.xLine ?? true,
       xStroke: props.xStroke ?? "#ccc",
       xStrokeWidth: props.xStrokeWidth ?? "1",
       xStrokeDasharray: props.xStrokeDasharray ?? "3 3",
       xStrokeOpacity: props.xStrokeOpacity ?? "1",
-      yTicks: props.yTicks ?? areaCtx.data.map((v: any) => v[shapeCtx.yKey]) as number[],
+      yTicks: props.yTicks ?? shapeCtx.data.map((v: any) => v[shapeCtx.yKey]) as number[],
       yLine: props.yLine ?? true,
       yStroke: props.yStroke ?? "#ccc",
       yStrokeWidth: props.yStrokeWidth ?? "1",
@@ -29,7 +29,7 @@ const Grid: React.FunctionComponent<IGridProps> = (props) => {
       yStrokeOpacity: props.yStrokeOpacity ?? "1",
     };
   }, [
-    areaCtx.data,
+    shapeCtx.data,
     props.xTicks,
     props.xLine,
     props.xStroke,
@@ -58,7 +58,7 @@ const Grid: React.FunctionComponent<IGridProps> = (props) => {
           return (
             <line
               key={i}
-              transform={`translate(${shapeCtx.xScale(v)} ${shapeCtx.padding.top + shapeCtx.height})`}
+              transform={`translate(${shapeCtx.xScale(v)} ${areaCtx.padding.top + shapeCtx.height})`}
               y2={-shapeCtx.height}
               stroke={attr.xStroke}
               strokeWidth={attr.xStrokeWidth}
@@ -72,7 +72,7 @@ const Grid: React.FunctionComponent<IGridProps> = (props) => {
           return (
             <line
               key={i}
-              transform={`translate(${shapeCtx.padding.left} ${shapeCtx.yScale(v)})`}
+              transform={`translate(${areaCtx.padding.left} ${shapeCtx.yScale(v)})`}
               x2={shapeCtx.width}
               stroke={attr.yStroke}
               strokeWidth={attr.yStrokeWidth}
