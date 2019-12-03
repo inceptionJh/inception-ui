@@ -7,11 +7,21 @@ import { Chart } from "../src";
 
 import dateHelper from "../src/utils/date";
 
+import { ITooltipComponentProps } from "../src/Chart/Tooltip/type";
+
+const Tootip: React.FunctionComponent<ITooltipComponentProps> = (props) => {
+  return (
+    <g transform={`translate(${props.x} ${props.y})`} opacity={props.hover ? 1 : 0}>
+      <text>test</text>
+    </g>
+  );
+};
+
 const data = [
   { date: new Date(`2018-01-01`), price: 100000000, amount: 1 },
   { date: new Date(`2018-02-01`), price: 120000000, amount: 2 },
   { date: new Date(`2018-03-01`), price: 140000000, amount: 6 },
-  { date: new Date(`2018-04-01`), price: 130000000, amount: 6 },
+  // { date: new Date(`2018-04-01`), price: 130000000, amount: 6 },
   { date: new Date(`2018-05-01`), price: 170000000, amount: 5 },
   { date: new Date(`2018-06-01`), price: 180000000, amount: 2 },
 ].map((v) => ({ ...v, date: v.date.valueOf() }));
@@ -81,6 +91,7 @@ const Test = () => {
         <Chart.Axis.Y
           ticks={yTicks}
         />
+        <Chart.Tooltip component={Tootip} />
       </Chart.Shape.Bar>
     </Chart.Area>
   );
