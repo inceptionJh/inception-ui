@@ -1,4 +1,4 @@
-export type TAreaContext = {
+export interface IAreaContext {
   className: string;
   width: number;
   height: number;
