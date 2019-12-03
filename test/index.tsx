@@ -27,6 +27,7 @@ const data1 = [
 ].map((v) => ({ ...v, date: v.date.valueOf() }));
 
 const data2 = data1.map((v) => ({ ...v, price: v.price * 0.8 }));
+const data3 = data2.concat([{ ...data2[2], price: data2[2].price + 10000000 }]);
 
 const Test = () => {
   const padding = { top: 0, right: 0, bottom: 30, left: 50 };
@@ -97,6 +98,14 @@ const Test = () => {
 
       <Chart.Shape.StepLine
         data={data2}
+        xKey="date"
+        yKey="price"
+        xScale={xScale}
+        yScale={yScale}
+      />
+
+      <Chart.Shape.Scatter
+        data={data3}
         xKey="date"
         yKey="price"
         xScale={xScale}
