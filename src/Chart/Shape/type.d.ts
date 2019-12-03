@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 export type TShapeContext = {
-  type: "scatter" | "bar";
+  type: "scatter" | "bar" | "line";
   xKey: string;
   yKey: string;
   width: number;

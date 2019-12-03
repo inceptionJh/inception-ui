@@ -5,13 +5,14 @@ import * as d3 from "d3";
 
 import styled from "styled-components";
 
-import stringHelper from "../../../utils/string";
 import AreaContext from "../../Area/context";
 import ShapeContext from "../context";
 
-import { IBarProps } from "./type";
+import stringHelper from "../../../utils/string";
 
-const Bar: React.FunctionComponent<IBarProps> = (props) => {
+import { ILineProps } from "./type";
+
+const Line: React.FunctionComponent<ILineProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
 
   const attr = React.useMemo(() => {
@@ -32,27 +33,27 @@ const Bar: React.FunctionComponent<IBarProps> = (props) => {
 
     return {
       padding,
-      width: props.width ?? 10,
-      fill: props.fill ?? "#777",
+      stroke: props.stroke ?? "#777",
+      strokeWidth: props.strokeWidth ?? "1",
+      strokeDasharray: props.strokeDasharray,
       opacity: props.opacity ?? "1",
       xScale: props.xScale ?? xScale,
       yScale: props.yScale ?? yScale,
-      onClick: props.onClick ?? (() => undefined),
-      onMouseEnter: props.onMouseEnter ?? (() => undefined),
-      onMouseLeave: props.onMouseLeave ?? (() => undefined),
     };
   }, [
     areaCtx.data,
     props.padding,
+    props.stroke,
+    props.strokeWidth,
+    props.strokeDasharray,
+    props.opacity,
     props.xScale,
     props.yScale,
-    props.width,
-    props.fill,
-    props.opacity,
-    props.onClick,
-    props.onMouseEnter,
-    props.onMouseLeave,
   ]);
+
+  const path = areaCtx.data.map((d: any, i: number) => {
+    return `${i === 0 ? "M" : "L"}${attr.xScale(d[props.xKey])} ${attr.yScale(d[props.yKey])}`;
+  }).join(",");
 
   const width = areaCtx.width - (attr.padding.left + attr.padding.right);
   const height = areaCtx.height - (attr.padding.top + attr.padding.bottom);
@@ -68,36 +69,25 @@ const Bar: React.FunctionComponent<IBarProps> = (props) => {
   return (
     <ShapeContext.Provider
       value={{
-        type: "bar",
+        type: "line",
         xScale: attr.xScale,
         yScale: attr.yScale,
         padding: attr.padding,
         width, height,
         xKey: props.xKey, yKey: props.yKey,
-        onMouseEnter: attr.onMouseEnter,
-        onMouseLeave: attr.onMouseLeave,
       }}>
       {"document" in globalThis ?
         ReactDOM.createPortal((
-          <>
-            {areaCtx.data.map((v: any, i: number, g: any[]) => {
-              return (
-                <rect
-                  key={`${props.className}-${i}`}
-                  className={`${props.className}`}
-                  x={`${attr.xScale(v[props.xKey]) - attr.width / 2}px`}
-                  y={`${attr.yScale(v[props.yKey])}px`}
-                  width={`${attr.width}px`}
-                  height={`${areaCtx.height - (attr.padding.top + attr.padding.bottom) - attr.yScale(v[props.yKey])}px`}
-                  fill={attr.fill}
-                  opacity={attr.opacity}
-                  onClick={() => attr.onClick(v, i, g)}
-                  onMouseEnter={() => attr.onMouseEnter(v, i, g)}
-                  onMouseLeave={() => attr.onMouseLeave(v, i, g)}
-                />
-              );
-            })}
-          </>
+          <path
+            key={`${props.className}`}
+            className={`${props.className}`}
+            fill="transparent"
+            d={path}
+            stroke={attr.stroke}
+            strokeWidth={attr.strokeWidth}
+            strokeDasharray={attr.strokeDasharray}
+            opacity={attr.opacity}
+          />
         ),
           document.querySelector(`${stringHelper.className2Classes(areaCtx.className)} > .data`)!)
         : null
@@ -107,6 +97,5 @@ const Bar: React.FunctionComponent<IBarProps> = (props) => {
   );
 };
 
-export default styled(Bar)`
-  cursor: ${(props) => props.cursor};
+export default styled(Line)`
 `;
