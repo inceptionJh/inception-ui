@@ -17,42 +17,43 @@ const Tootip: React.FunctionComponent<ITooltipComponentProps> = (props) => {
   );
 };
 
-const data = [
-  { date: new Date(`2018-01-01`), price: 100000000, amount: 1 },
-  { date: new Date(`2018-02-01`), price: 120000000, amount: 2 },
-  { date: new Date(`2018-04-01`), price: 140000000, amount: 6 },
-  { date: new Date(`2018-04-01`), price: 160000000, amount: 6 },
-  { date: new Date(`2018-05-01`), price: 170000000, amount: 5 },
-  { date: new Date(`2018-06-01`), price: 180000000, amount: 2 },
+const data1 = [
+  { date: new Date(`2018-01-01`), price: 150000000 },
+  { date: new Date(`2018-02-01`), price: 180000000 },
+  { date: new Date(`2018-03-01`), price: 170000000 },
+  { date: new Date(`2018-04-01`), price: 175000000 },
+  { date: new Date(`2018-05-01`), price: 175000000 },
+  { date: new Date(`2018-06-01`), price: 180000000 },
 ].map((v) => ({ ...v, date: v.date.valueOf() }));
+
+const data2 = data1.map((v) => ({ ...v, price: v.price * 0.8 }));
 
 const Test = () => {
   const padding = { top: 0, right: 0, bottom: 30, left: 50 };
 
-  const startDate = new Date(data[0].date);
+  const startDate = new Date(data1[0].date);
   startDate.setMonth(startDate.getMonth() - 1);
 
-  const endDate = new Date(data[data.length - 1].date);
+  const endDate = new Date(data1[data1.length - 1].date);
   endDate.setMonth(endDate.getMonth() + 1);
 
-  const xDiff = endDate.valueOf() - startDate.valueOf();
-  const xGap = xDiff * 0.1;
-  const xDomain = [data[0].date - xGap, data[data.length - 1].date + xGap];
-  const xRange = [0 + padding.left, 500 - padding.right];
+  const xDomain = [data1[0].date, data1[data1.length - 1].date];
+  const xRange = [0 + padding.left + 20, 500 - padding.right - 20];
 
   const xScale = d3.scaleLinear();
   xScale.domain(xDomain);
   xScale.range(xRange);
 
   const xTicks = React.useMemo(() => {
-    return dateHelper.generateDateList(new Date(data[0].date), new Date(data[data.length - 1].date), "month").map((v) => v.valueOf());
-  }, [data]);
+    return dateHelper.generateDateList(new Date(data1[0].date), new Date(data1[data1.length - 1].date), "month").map((v) => v.valueOf());
+  }, [data1]);
 
-  const [yMin, yMax] = d3.extent(data.map((v) => v.price));
+  const [yMin, yMax] = [100000000, 200000000];
+  // const [yMin, yMax] = d3.extent(data.map((v) => v.price));
   const yDiff = yMax - yMin;
-  const yGap = Math.round(yDiff * 0.2 / Math.pow(10, `${yDiff}`.length - 2)) * Math.pow(10, `${yDiff}`.length - 2);
+  const yGap = Math.round(yDiff / 5 / Math.pow(10, `${yDiff}`.length - 2)) * Math.pow(10, `${yDiff}`.length - 2);
   const yDomain = [yMax + yGap, yMin - yGap] as [number, number];
-  const yRange = [padding.top, 500 - padding.bottom];
+  const yRange = [padding.top + 20, 500 - padding.bottom - 20];
 
   const yTicks = React.useMemo(() => {
     const ticks = [] as number[];
@@ -61,7 +62,7 @@ const Test = () => {
       tick += yGap;
     }
     return ticks;
-  }, [data]);
+  }, [data1]);
 
   const yScale = d3.scaleLinear();
   yScale.domain(yDomain);
@@ -71,14 +72,14 @@ const Test = () => {
     <Chart.Area
       width={500}
       height={500}
-      data={data}
+      padding={padding}
     >
-      <Chart.Shape.Line
+      <Chart.Shape.StepLine
+        data={data1}
         xKey="date"
         yKey="price"
         xScale={xScale}
         yScale={yScale}
-        padding={padding}
       >
         <Chart.Grid
           xTicks={xTicks}
@@ -91,8 +92,16 @@ const Test = () => {
         <Chart.Axis.Y
           ticks={yTicks}
         />
-        <Chart.Tooltip component={Tootip} />
-      </Chart.Shape.Line>
+        <Chart.Tooltip component={(p) => <Tootip {...p} />} />
+      </Chart.Shape.StepLine>
+
+      <Chart.Shape.StepLine
+        data={data2}
+        xKey="date"
+        yKey="price"
+        xScale={xScale}
+        yScale={yScale}
+      />
     </Chart.Area>
   );
 };

@@ -2,12 +2,12 @@ export interface IAreaContext {
   className: string;
   width: number;
   height: number;
-  data: any[];
+  padding: { top: number; right: number; bottom: number, left: number };
 }
 
 export interface IChartAreaProps {
   className?: string;
   width: number;
   height: number;
-  data: any[];
+  padding?: { top: number; right: number; bottom: number, left: number };
 }

@@ -16,6 +16,10 @@ const XAxis: React.FunctionComponent<IXAxisProps> = (props) => {
 
   const [render, setRender] = React.useState(false);
 
+  const ticks = React.useMemo(() => {
+    return props.ticks ? props.ticks : shapeCtx.data.map((d: any) => d[shapeCtx.xKey]);
+  }, [props.ticks]);
+
   React.useEffect(() => {
     setRender(true);
   }, []);
@@ -25,12 +29,12 @@ const XAxis: React.FunctionComponent<IXAxisProps> = (props) => {
   return (
     ReactDOM.createPortal(
       <>
-        <path d={`M${shapeCtx.padding.left} ${shapeCtx.padding.top + shapeCtx.height}, l${shapeCtx.width} 0`} stroke="#000" />
-        {(props.ticks ? props.ticks : areaCtx.data.map((d: any) => d[shapeCtx.xKey])).map((v: any, i: number, g: any[]) => {
+        <path d={`M${areaCtx.padding.left} ${areaCtx.padding.top + shapeCtx.height}, l${shapeCtx.width} 0`} stroke="#000" />
+        {ticks.map((v: any, i: number, g: any[]) => {
           return (
             <g
               key={`${props.className}-${i}`}
-              transform={`translate(${shapeCtx.xScale(v)} ${shapeCtx.padding.top + shapeCtx.height})`}
+              transform={`translate(${shapeCtx.xScale(v)} ${areaCtx.padding.top + shapeCtx.height})`}
             >
               <line y2="5" stroke="#000" />
               <text

@@ -16,6 +16,10 @@ const _YAxis: React.FunctionComponent<IYAxisProps> = (props) => {
 
   const [render, setRender] = React.useState(false);
 
+  const ticks = React.useMemo(() => {
+    return props.ticks ? props.ticks : shapeCtx.data.map((d: any) => d[shapeCtx.yKey]);
+  }, [props.ticks]);
+
   React.useEffect(() => {
     setRender(true);
   }, []);
@@ -25,12 +29,12 @@ const _YAxis: React.FunctionComponent<IYAxisProps> = (props) => {
   return (
     ReactDOM.createPortal(
       <>
-        <path d={`M${shapeCtx.padding.left} ${shapeCtx.padding.top}, l0 ${shapeCtx.height}`} stroke="#000" />
-        {(props.ticks ? props.ticks : areaCtx.data.map((d: any) => d[shapeCtx.yKey])).map((d: any, i: number, g: any[]) => {
+        <path d={`M${areaCtx.padding.left} ${areaCtx.padding.top}, l0 ${shapeCtx.height}`} stroke="#000" />
+        {ticks.map((d: any, i: number, g: any[]) => {
           return (
             <g
               key={`${props.className}-${i}`}
-              transform={`translate(${shapeCtx.padding.left} ${shapeCtx.yScale(d)})`}
+              transform={`translate(${areaCtx.padding.left} ${shapeCtx.yScale(d)})`}
             >
               <line x2="-5" stroke="#000" />
               <text
