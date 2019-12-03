@@ -18,8 +18,17 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
 
   const mouseMoveHandler = React.useCallback((e: MouseEvent) => {
     const result = areaCtx.data.reduce((accu: any, curr: any) => {
-      const mouse = shapeCtx.xScale.invert(e.offsetX).valueOf();
-      return Math.abs(accu[shapeCtx.xKey].valueOf() - mouse) >= Math.abs(curr[shapeCtx.xKey].valueOf() - mouse) ? curr : accu;
+      const mouseX = shapeCtx.xScale.invert(e.offsetX).valueOf();
+      const mouseY = shapeCtx.yScale.invert(e.offsetY).valueOf();
+
+      const xDiffAccu = Math.abs(accu[shapeCtx.xKey] - mouseX);
+      const xDiffCurr = Math.abs(curr[shapeCtx.xKey] - mouseX);
+
+      const yDiffAccu = Math.abs(accu[shapeCtx.yKey] - mouseY);
+      const yDiffCurr = Math.abs(curr[shapeCtx.yKey] - mouseY);
+
+      if (xDiffAccu === xDiffCurr) return yDiffAccu <= yDiffCurr ? accu : curr;
+      return xDiffAccu < xDiffCurr ? accu : curr;
     }, areaCtx.data[0]);
     setNearData(result);
   }, []);
