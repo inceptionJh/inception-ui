@@ -30,15 +30,17 @@ const data2 = data1.map((v) => ({ ...v, price: v.price * 0.8 }));
 const data3 = data2.concat([{ ...data2[2], price: data2[2].price + 10000000 }]);
 
 const Test = () => {
+  const [data, setData] = React.useState(data1);
+
   const padding = { top: 0, right: 0, bottom: 30, left: 50 };
 
-  const startDate = new Date(data1[0].date);
+  const startDate = new Date(data[0].date);
   startDate.setMonth(startDate.getMonth() - 1);
 
-  const endDate = new Date(data1[data1.length - 1].date);
+  const endDate = new Date(data[data.length - 1].date);
   endDate.setMonth(endDate.getMonth() + 1);
 
-  const xDomain = [data1[0].date, data1[data1.length - 1].date];
+  const xDomain = [data[0].date, data[data.length - 1].date];
   const xRange = [0 + padding.left + 20, 500 - padding.right - 20];
 
   const xScale = d3.scaleLinear();
@@ -46,8 +48,8 @@ const Test = () => {
   xScale.range(xRange);
 
   const xTicks = React.useMemo(() => {
-    return dateHelper.generateDateList(new Date(data1[0].date), new Date(data1[data1.length - 1].date), "month").map((v) => v.valueOf());
-  }, [data1]);
+    return dateHelper.generateDateList(new Date(data[0].date), new Date(data[data.length - 1].date), "month").map((v) => v.valueOf());
+  }, [data]);
 
   const [yMin, yMax] = [100000000, 200000000];
   // const [yMin, yMax] = d3.extent(data.map((v) => v.price));
@@ -63,11 +65,19 @@ const Test = () => {
       tick += yGap;
     }
     return ticks;
-  }, [data1]);
+  }, [data]);
 
   const yScale = d3.scaleLinear();
   yScale.domain(yDomain);
   yScale.range(yRange);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      const newData = data.slice();
+      newData.splice(0, 2);
+      setData(newData);
+    }, 2000);
+  }, []);
 
   return (
     <Chart.Area
@@ -76,7 +86,7 @@ const Test = () => {
       padding={padding}
     >
       <Chart.Shape.StepLine
-        data={data1}
+        data={data}
         xKey="date"
         yKey="price"
         xScale={xScale}
@@ -95,22 +105,6 @@ const Test = () => {
         />
         <Chart.Tooltip component={(p) => <Tootip {...p} />} />
       </Chart.Shape.StepLine>
-
-      <Chart.Shape.StepLine
-        data={data2}
-        xKey="date"
-        yKey="price"
-        xScale={xScale}
-        yScale={yScale}
-      />
-
-      <Chart.Shape.Scatter
-        data={data3}
-        xKey="date"
-        yKey="price"
-        xScale={xScale}
-        yScale={yScale}
-      />
     </Chart.Area>
   );
 };
