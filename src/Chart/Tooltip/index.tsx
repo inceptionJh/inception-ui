@@ -33,10 +33,15 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
     setNearData(result);
   }, [shapeCtx.data, shapeCtx.xScale, shapeCtx.yScale]);
 
+  const mouseOverHandler = React.useCallback(() => setHover(true), []);
+  const mouseOutHandler = React.useCallback(() => setHover(false), []);
+
   React.useEffect(() => {
-    const mouseOverHandler = () => setHover(true);
-    const mouseOutHandler = () => setHover(false);
     const svgEl = document.querySelector(`${stringHelper.className2Classes(areaCtx.className)}`) as SVGElement;
+    svgEl.removeEventListener("mouseover", mouseOverHandler);
+    svgEl.removeEventListener("mouseout", mouseOutHandler);
+    svgEl.removeEventListener("mousemove", mouseMoveHandler);
+
     svgEl.addEventListener("mouseover", mouseOverHandler);
     svgEl.addEventListener("mouseout", mouseOutHandler);
     svgEl.addEventListener("mousemove", mouseMoveHandler);
@@ -45,7 +50,7 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
       svgEl.removeEventListener("mouseout", mouseOutHandler);
       svgEl.removeEventListener("mousemove", mouseMoveHandler);
     };
-  }, []);
+  }, [mouseMoveHandler]);
 
   return (
     <props.component
