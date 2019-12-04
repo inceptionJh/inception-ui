@@ -54,33 +54,39 @@ const Grid: React.FunctionComponent<IGridProps> = (props) => {
   return (
     ReactDOM.createPortal(
       <>
-        {attr.xTicks.map((v: any, i: number, g: any[]) => {
-          return (
-            <line
-              key={i}
-              transform={`translate(${shapeCtx.xScale(v)} ${areaCtx.padding.top + shapeCtx.height})`}
-              y2={-shapeCtx.height}
-              stroke={attr.xStroke}
-              strokeWidth={attr.xStrokeWidth}
-              strokeDasharray={attr.xStrokeDasharray}
-              strokeOpacity={attr.xStrokeOpacity}
-            />
-          );
-        })}
+        {attr.xLine
+          ? attr.xTicks.map((v: any, i: number, g: any[]) => {
+            return (
+              <line
+                key={i}
+                transform={`translate(${shapeCtx.xScale(v)} ${areaCtx.padding.top + shapeCtx.height})`}
+                y2={-shapeCtx.height}
+                stroke={attr.xStroke}
+                strokeWidth={attr.xStrokeWidth}
+                strokeDasharray={attr.xStrokeDasharray}
+                strokeOpacity={attr.xStrokeOpacity}
+              />
+            );
+          })
+          : null
+        }
 
-        {attr.yTicks.map((v: any, i: number, g: any[]) => {
-          return (
-            <line
-              key={i}
-              transform={`translate(${areaCtx.padding.left} ${shapeCtx.yScale(v)})`}
-              x2={shapeCtx.width}
-              stroke={attr.yStroke}
-              strokeWidth={attr.yStrokeWidth}
-              strokeDasharray={attr.yStrokeDasharray}
-              strokeOpacity={attr.yStrokeOpacity}
-            />
-          );
-        })}
+        {attr.yLine
+          ? attr.yTicks.map((v: any, i: number, g: any[]) => {
+            return (
+              <line
+                key={i}
+                transform={`translate(${areaCtx.padding.left} ${shapeCtx.yScale(v)})`}
+                x2={shapeCtx.width}
+                stroke={attr.yStroke}
+                strokeWidth={attr.yStrokeWidth}
+                strokeDasharray={attr.yStrokeDasharray}
+                strokeOpacity={attr.yStrokeOpacity}
+              />
+            );
+          })
+          : null
+        }
       </>,
       document.querySelector(`${stringHelper.className2Classes(areaCtx.className!)} > .grid`)!,
     )
