@@ -4,11 +4,11 @@ export interface IGridProps {
   xStrokeWidth?: string;
   xStrokeDasharray?: string;
   xStrokeOpacity?: string;
-  xTicks?: number[];
+  xTicks: number[];
   yLine?: boolean;
   yStroke?: string;
   yStrokeWidth?: string;
   yStrokeDasharray?: string;
   yStrokeOpacity?: string;
-  yTicks?: number[];
+  yTicks: number[];
 }

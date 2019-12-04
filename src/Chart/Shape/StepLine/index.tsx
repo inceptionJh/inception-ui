@@ -32,18 +32,24 @@ const Line: React.FunctionComponent<IStepLineProps> = (props) => {
     props.yScale,
   ]);
 
-  const path = props.data.map((d: any, i: number, g: any[]) => {
-    switch (i) {
-      case 0:
-        return `M${areaCtx.padding.left} ${attr.yScale(d[props.yKey])},L${attr.xScale(d[props.xKey])} ${attr.yScale(d[props.yKey])}`;
+  const path = (() => {
+    if (props.data.length === 0) return "";
 
-      case g.length - 1:
-        return `L${attr.xScale(d[props.xKey])} ${attr.yScale(g[i - 1][props.yKey])},L${attr.xScale(d[props.xKey])} ${attr.yScale(d[props.yKey])},L${areaCtx.width - areaCtx.padding.right} ${attr.yScale(d[props.yKey])}`;
+    if (props.data.length === 1) return `M${areaCtx.padding.left} ${attr.yScale(props.data[0][props.yKey])},L${attr.xScale(props.data[0][props.xKey])} ${attr.yScale(props.data[0][props.yKey])},L${areaCtx.width - areaCtx.padding.right} ${attr.yScale(props.data[0][props.yKey])}`;
 
-      default:
-        return `L${attr.xScale(d[props.xKey])} ${attr.yScale(g[i - 1][props.yKey])},L${attr.xScale(d[props.xKey])} ${attr.yScale(d[props.yKey])}`;
-    }
-  }).join(",");
+    return props.data.map((d: any, i: number, g: any[]) => {
+      switch (i) {
+        case 0:
+          return `M${areaCtx.padding.left} ${attr.yScale(d[props.yKey])},L${attr.xScale(d[props.xKey])} ${attr.yScale(d[props.yKey])}`;
+
+        case g.length - 1:
+          return `L${attr.xScale(d[props.xKey])} ${attr.yScale(g[i - 1][props.yKey])},L${attr.xScale(d[props.xKey])} ${attr.yScale(d[props.yKey])},L${areaCtx.width - areaCtx.padding.right} ${attr.yScale(d[props.yKey])}`;
+
+        default:
+          return `L${attr.xScale(d[props.xKey])} ${attr.yScale(g[i - 1][props.yKey])},L${attr.xScale(d[props.xKey])} ${attr.yScale(d[props.yKey])}`;
+      }
+    }).join(",");
+  })();
 
   const width = areaCtx.width - (areaCtx.padding.left + areaCtx.padding.right);
   const height = areaCtx.height - (areaCtx.padding.top + areaCtx.padding.bottom);
