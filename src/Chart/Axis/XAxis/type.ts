@@ -1,5 +1,5 @@
 export interface IXAxisProps {
   className?: string;
-  ticks?: any[];
+  ticks: any[];
   tickFormat?: (v: any, i: number, g: any[]) => void;
 }
