@@ -31,7 +31,7 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
       return xDiffAccu < xDiffCurr ? accu : curr;
     }, shapeCtx.data[0]);
     setNearData(result);
-  }, []);
+  }, [shapeCtx.data, shapeCtx.xScale, shapeCtx.yScale]);
 
   React.useEffect(() => {
     const mouseOverHandler = () => setHover(true);
