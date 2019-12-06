@@ -1,11 +1,13 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import styled from "styled-components";
 
-import stringHelper from "../../utils/string";
+import Portal from "../../Portal";
+
 import ShapeContext from "../Shape/context";
 import AreaContext from "../Area/context";
+
+import stringHelper from "../../utils/string";
 
 import { IGridProps } from "./type";
 
@@ -52,44 +54,41 @@ const Grid: React.FunctionComponent<IGridProps> = (props) => {
   if (!render) return null;
 
   return (
-    ReactDOM.createPortal(
-      <>
-        {attr.xLine
-          ? attr.xTicks.map((v: any, i: number, g: any[]) => {
-            return (
-              <line
-                key={i}
-                transform={`translate(${shapeCtx.xScale(v)} ${areaCtx.padding.top + shapeCtx.height})`}
-                y2={-shapeCtx.height}
-                stroke={attr.xStroke}
-                strokeWidth={attr.xStrokeWidth}
-                strokeDasharray={attr.xStrokeDasharray}
-                strokeOpacity={attr.xStrokeOpacity}
-              />
-            );
-          })
-          : null
-        }
+    <Portal selector={`${stringHelper.className2Classes(areaCtx.className!)} > .grid`}>
+      {attr.xLine
+        ? attr.xTicks.map((v: any, i: number, g: any[]) => {
+          return (
+            <line
+              key={i}
+              transform={`translate(${shapeCtx.xScale(v)} ${areaCtx.padding.top + shapeCtx.height})`}
+              y2={-shapeCtx.height}
+              stroke={attr.xStroke}
+              strokeWidth={attr.xStrokeWidth}
+              strokeDasharray={attr.xStrokeDasharray}
+              strokeOpacity={attr.xStrokeOpacity}
+            />
+          );
+        })
+        : null
+      }
 
-        {attr.yLine
-          ? attr.yTicks.map((v: any, i: number, g: any[]) => {
-            return (
-              <line
-                key={i}
-                transform={`translate(${areaCtx.padding.left} ${shapeCtx.yScale(v)})`}
-                x2={shapeCtx.width}
-                stroke={attr.yStroke}
-                strokeWidth={attr.yStrokeWidth}
-                strokeDasharray={attr.yStrokeDasharray}
-                strokeOpacity={attr.yStrokeOpacity}
-              />
-            );
-          })
-          : null
-        }
-      </>,
-      document.querySelector(`${stringHelper.className2Classes(areaCtx.className!)} > .grid`)!,
-    )
+      {attr.yLine
+        ? attr.yTicks.map((v: any, i: number, g: any[]) => {
+          return (
+            <line
+              key={i}
+              transform={`translate(${areaCtx.padding.left} ${shapeCtx.yScale(v)})`}
+              x2={shapeCtx.width}
+              stroke={attr.yStroke}
+              strokeWidth={attr.yStrokeWidth}
+              strokeDasharray={attr.yStrokeDasharray}
+              strokeOpacity={attr.yStrokeOpacity}
+            />
+          );
+        })
+        : null
+      }
+    </Portal>
   );
 };
 

@@ -1,7 +1,8 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import styled from "styled-components";
+
+import Portal from "../../../Portal";
 
 import ShapeContext from "../../Shape/context";
 import AreaContext from "../../Area/context";
@@ -23,30 +24,27 @@ const XAxis: React.FunctionComponent<IXAxisProps> = (props) => {
   if (!render) return null;
 
   return (
-    ReactDOM.createPortal(
-      <>
-        <path d={`M${areaCtx.padding.left} ${areaCtx.padding.top + shapeCtx.height}, l${shapeCtx.width} 0`} stroke="#000" />
-        {props.ticks.map((v: any, i: number, g: any[]) => {
-          return (
-            <g
-              key={`${props.className}-${i}`}
-              transform={`translate(${shapeCtx.xScale(v)} ${areaCtx.padding.top + shapeCtx.height})`}
+    <Portal selector={`${stringHelper.className2Classes(areaCtx.className!)} > .x-axis`}>
+      <path d={`M${areaCtx.padding.left} ${areaCtx.padding.top + shapeCtx.height}, l${shapeCtx.width} 0`} stroke="#000" />
+      {props.ticks.map((v: any, i: number, g: any[]) => {
+        return (
+          <g
+            key={`${props.className}-${i}`}
+            transform={`translate(${shapeCtx.xScale(v)} ${areaCtx.padding.top + shapeCtx.height})`}
+          >
+            <line y2="5" stroke="#000" />
+            <text
+              y="5"
+              textAnchor="middle"
+              dominantBaseline="hanging"
+              fontSize="10"
             >
-              <line y2="5" stroke="#000" />
-              <text
-                y="5"
-                textAnchor="middle"
-                dominantBaseline="hanging"
-                fontSize="10"
-              >
-                {props.tickFormat ? props.tickFormat(v, i, g.map((t) => t)) : v.valueOf()}
-              </text>
-            </g>
-          );
-        })}
-      </>,
-      document.querySelector(`${stringHelper.className2Classes(areaCtx.className!)} > .x-axis`)!,
-    )
+              {props.tickFormat ? props.tickFormat(v, i, g.map((t) => t)) : v.valueOf()}
+            </text>
+          </g>
+        );
+      })}
+    </Portal>
   );
 };
 

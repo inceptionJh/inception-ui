@@ -2,17 +2,15 @@ import * as React from "react";
 
 import styled from "styled-components";
 
-export interface IDefaultInputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  border?: string;
-}
+import { IDefaultInputProps } from "./type";
 
-const _DefaultInput: React.FunctionComponent<IDefaultInputProps> = (props) => {
+const DefaultInput: React.FunctionComponent<IDefaultInputProps> = (props) => {
   return (
     <input {...props} />
   );
 };
 
-const IDefaultInput = styled(_DefaultInput)`
+export default styled(DefaultInput)`
   box-sizing: border-box;
 
   font-size: 14px;
@@ -24,5 +22,3 @@ const IDefaultInput = styled(_DefaultInput)`
 
   outline: none;
 `;
-
-export default IDefaultInput;

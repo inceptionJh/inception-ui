@@ -9,32 +9,32 @@ import ShapeContext from "../context";
 
 import stringHelper from "../../../utils/string";
 
-import { IScatterProps } from "./type";
+import { IRangeBarProps } from "./type";
 
-const Scatter: React.FunctionComponent<IScatterProps> = (props) => {
+const RangeBar: React.FunctionComponent<IRangeBarProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
 
   const attr = React.useMemo(() => {
     return {
-      r: props.r ?? "2",
+      width: props.width ?? 10,
       fill: props.fill ?? "#777",
-      stroke: props.stroke ?? "#777",
-      strokeWidth: props.strokeWidth ?? "1",
-      strokeDasharray: props.strokeDasharray,
       opacity: props.opacity ?? "1",
       xScale: props.xScale,
       yScale: props.yScale,
+      onClick: props.onClick ?? (() => undefined),
+      onMouseEnter: props.onMouseEnter ?? (() => undefined),
+      onMouseLeave: props.onMouseLeave ?? (() => undefined),
     };
   }, [
     props.data,
-    props.r,
-    props.fill,
-    props.stroke,
-    props.strokeWidth,
-    props.strokeDasharray,
-    props.opacity,
     props.xScale,
     props.yScale,
+    props.width,
+    props.fill,
+    props.opacity,
+    props.onClick,
+    props.onMouseEnter,
+    props.onMouseLeave,
   ]);
 
   const width = areaCtx.width - (areaCtx.padding.left + areaCtx.padding.right);
@@ -51,27 +51,35 @@ const Scatter: React.FunctionComponent<IScatterProps> = (props) => {
   return (
     <ShapeContext.Provider
       value={{
-        type: "step-line",
+        type: "range-bar",
         data: props.data,
         xScale: attr.xScale,
         yScale: attr.yScale,
         width, height,
-        xKey: props.xKey, yKey: props.yKey,
+        xKey: props.xKey,
+        yKey: props.yKey,
+        yMinKey: props.yMinKey,
+        yMaxKey: props.yMaxKey,
+        onMouseEnter: attr.onMouseEnter,
+        onMouseLeave: attr.onMouseLeave,
       }}>
       <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .data`}>
-        {props.data.map((d, i) => {
+        {props.data.map((v: any, i: number, g: any[]) => {
+          const barHeight = Math.abs(attr.yScale(v[props.yMaxKey]) - attr.yScale(v[props.yMinKey]));
+
           return (
-            <circle
+            <rect
               key={`${props.className}-${i}`}
               className={`${props.className}`}
-              cx={props.xScale(d[props.xKey])}
-              cy={props.yScale(d[props.yKey])}
-              r={attr.r}
+              x={`${attr.xScale(v[props.xKey]) - attr.width / 2}px`}
+              y={`${attr.yScale(v[props.yMinKey]) - barHeight}px`}
+              width={`${attr.width}px`}
+              height={`${barHeight}px`}
               fill={attr.fill}
-              stroke={attr.stroke}
-              strokeWidth={attr.strokeWidth}
-              strokeDasharray={attr.strokeDasharray}
               opacity={attr.opacity}
+              onClick={() => attr.onClick(v, i, g)}
+              onMouseEnter={() => attr.onMouseEnter(v, i, g)}
+              onMouseLeave={() => attr.onMouseLeave(v, i, g)}
             />
           );
         })}
@@ -81,4 +89,6 @@ const Scatter: React.FunctionComponent<IScatterProps> = (props) => {
   );
 };
 
-export default styled(Scatter)``;
+export default styled(RangeBar)`
+  cursor: ${(props) => props.cursor};
+`;

@@ -1,5 +1,5 @@
 import * as React from "react";
 
-import { IShapeContext } from "./type";
+import { TShapeContext } from "./type";
 
-export default React.createContext({} as IShapeContext);
+export default React.createContext({} as TShapeContext);

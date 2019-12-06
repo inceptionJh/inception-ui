@@ -17,6 +17,15 @@ const Tootip: React.FunctionComponent<ITooltipComponentProps> = (props) => {
   );
 };
 
+const minMaxData = [
+  { date: new Date(`2018-01-01`), maxPrice: 150000000, minPrice: 100000000 },
+  { date: new Date(`2018-02-01`), maxPrice: 180000000, minPrice: 150000000 },
+  { date: new Date(`2018-03-01`), maxPrice: 170000000, minPrice: 150000000 },
+  { date: new Date(`2018-04-01`), maxPrice: 175000000, minPrice: 125000000 },
+  { date: new Date(`2018-05-01`), maxPrice: 175000000, minPrice: 135000000 },
+  { date: new Date(`2018-06-01`), maxPrice: 180000000, minPrice: 140000000 },
+].map((v) => ({ ...v, date: v.date.valueOf() }));
+
 const data1 = [
   { date: new Date(`2018-01-01`), price: 150000000 },
   { date: new Date(`2018-02-01`), price: 180000000 },
@@ -29,8 +38,8 @@ const data1 = [
 const data2 = data1.map((v) => ({ ...v, price: v.price * 0.8 }));
 const data3 = data2.concat([{ ...data2[2], price: data2[2].price + 10000000 }]);
 
-const Test = () => {
-  const [data, setData] = React.useState(data1);
+const Test: React.FunctionComponent = (props) => {
+  const [data, setData] = React.useState(minMaxData);
 
   const padding = { top: 0, right: 0, bottom: 30, left: 50 };
 
@@ -71,24 +80,18 @@ const Test = () => {
   yScale.domain(yDomain);
   yScale.range(yRange);
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      const newData = data.slice();
-      newData.splice(0, 2);
-      setData(newData);
-    }, 2000);
-  }, []);
-
   return (
     <Chart.Area
       width={500}
       height={500}
       padding={padding}
     >
-      <Chart.Shape.StepLine
+      <Chart.Shape.RangeBar
         data={data}
         xKey="date"
-        yKey="price"
+        yKey="maxPrice"
+        yMinKey="minPrice"
+        yMaxKey="maxPrice"
         xScale={xScale}
         yScale={yScale}
       >
@@ -104,7 +107,7 @@ const Test = () => {
           ticks={yTicks}
         />
         <Chart.Tooltip component={(p) => <Tootip {...p} />} />
-      </Chart.Shape.StepLine>
+      </Chart.Shape.RangeBar>
     </Chart.Area>
   );
 };

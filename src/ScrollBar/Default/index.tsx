@@ -2,12 +2,9 @@ import * as React from "react";
 
 import styled from "styled-components";
 
-export interface IDefaultScrollBarProps {
-  className?: string;
-  delay?: number;
-}
+import { IDefaultScrollBarProps } from "./type";
 
-const _DefaultScrollBar: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
+const DefaultScrollBar: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
   const ref = React.useRef() as React.RefObject<HTMLDivElement>;
 
   const [height, setHeight] = React.useState(0);
@@ -43,7 +40,7 @@ const _DefaultScrollBar: React.FunctionComponent<IDefaultScrollBarProps> = (prop
   );
 };
 
-const DefaultScrollBar = styled(_DefaultScrollBar)`
+export default styled(DefaultScrollBar)`
   position: absolute;
   top: 0;
   right: 0;
@@ -53,5 +50,3 @@ const DefaultScrollBar = styled(_DefaultScrollBar)`
 
   background: #ccc;
 `;
-
-export default DefaultScrollBar;
