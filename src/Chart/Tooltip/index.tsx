@@ -2,8 +2,8 @@ import * as React from "react";
 
 import styled from "styled-components";
 
-import AreaContext from "../Area/context";
 import ShapeContext from "../Shape/context";
+import AreaContext from "../Area/context";
 
 import stringHelper from "../../utils/string";
 
@@ -63,6 +63,4 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
   );
 };
 
-export default styled(Tooltip)`
-
-`;
+export default styled(Tooltip)``;

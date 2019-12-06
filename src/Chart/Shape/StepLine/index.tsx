@@ -1,7 +1,8 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import styled from "styled-components";
+
+import Portal from "../../../Portal";
 
 import AreaContext from "../../Area/context";
 import ShapeContext from "../context";
@@ -72,26 +73,21 @@ const Line: React.FunctionComponent<IStepLineProps> = (props) => {
         width, height,
         xKey: props.xKey, yKey: props.yKey,
       }}>
-      {"document" in globalThis ?
-        ReactDOM.createPortal((
-          <path
-            key={`${props.className}`}
-            className={`${props.className}`}
-            fill="transparent"
-            d={path}
-            stroke={attr.stroke}
-            strokeWidth={attr.strokeWidth}
-            strokeDasharray={attr.strokeDasharray}
-            opacity={attr.opacity}
-          />
-        ),
-          document.querySelector(`${stringHelper.className2Classes(areaCtx.className)} > .data`)!)
-        : null
-      }
+      <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .data`}>
+        <path
+          key={`${props.className}`}
+          className={`${props.className}`}
+          fill="transparent"
+          d={path}
+          stroke={attr.stroke}
+          strokeWidth={attr.strokeWidth}
+          strokeDasharray={attr.strokeDasharray}
+          opacity={attr.opacity}
+        />
+      </Portal>
       {props.children}
     </ShapeContext.Provider>
   );
 };
 
-export default styled(Line)`
-`;
+export default styled(Line)``;

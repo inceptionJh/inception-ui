@@ -1,6 +1,6 @@
 {
   "name": "inception-ui",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "react ui component",
   "main": "./build/index.js",
   "browser": "./build/index.js",

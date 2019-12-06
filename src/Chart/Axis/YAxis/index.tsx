@@ -1,7 +1,8 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import styled from "styled-components";
+
+import Portal from "../../../Portal";
 
 import ShapeContext from "../../Shape/context";
 import AreaContext from "../../Area/context";
@@ -10,7 +11,7 @@ import stringHelper from "../../../utils/string";
 
 import { IYAxisProps } from "./type";
 
-const _YAxis: React.FunctionComponent<IYAxisProps> = (props) => {
+const YAxis: React.FunctionComponent<IYAxisProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
   const shapeCtx = React.useContext(ShapeContext);
 
@@ -23,31 +24,28 @@ const _YAxis: React.FunctionComponent<IYAxisProps> = (props) => {
   if (!render) return null;
 
   return (
-    ReactDOM.createPortal(
-      <>
-        <path d={`M${areaCtx.padding.left} ${areaCtx.padding.top}, l0 ${shapeCtx.height}`} stroke="#000" />
-        {props.ticks.map((d: any, i: number, g: any[]) => {
-          return (
-            <g
-              key={`${props.className}-${i}`}
-              transform={`translate(${areaCtx.padding.left} ${shapeCtx.yScale(d)})`}
+    <Portal selector={`${stringHelper.className2Classes(areaCtx.className!)} > .y-axis`}>
+      <path d={`M${areaCtx.padding.left} ${areaCtx.padding.top}, l0 ${shapeCtx.height}`} stroke="#000" />
+      {props.ticks.map((d: any, i: number, g: any[]) => {
+        return (
+          <g
+            key={`${props.className}-${i}`}
+            transform={`translate(${areaCtx.padding.left} ${shapeCtx.yScale(d)})`}
+          >
+            <line x2="-5" stroke="#000" />
+            <text
+              x="-7"
+              textAnchor="end"
+              dominantBaseline="middle"
+              fontSize="10"
             >
-              <line x2="-5" stroke="#000" />
-              <text
-                x="-7"
-                textAnchor="end"
-                dominantBaseline="middle"
-                fontSize="10"
-              >
-                {props.tickFormat ? props.tickFormat(d, i, g.map((v) => v)) : d.valueOf()}
-              </text>
-            </g>
-          );
-        })}
-      </>,
-      document.querySelector(`${stringHelper.className2Classes(areaCtx.className!)} > .y-axis`)!,
-    )
+              {props.tickFormat ? props.tickFormat(d, i, g.map((v) => v)) : d.valueOf()}
+            </text>
+          </g>
+        );
+      })}
+    </Portal>
   );
 };
 
-export default styled(_YAxis)``;
+export default styled(YAxis)``;

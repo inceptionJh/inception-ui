@@ -1,11 +1,13 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import styled from "styled-components";
 
-import stringHelper from "../../../utils/string";
+import Portal from "../../../Portal";
+
 import AreaContext from "../../Area/context";
 import ShapeContext from "../context";
+
+import stringHelper from "../../../utils/string";
 
 import { IBarProps } from "./type";
 
@@ -58,31 +60,25 @@ const Bar: React.FunctionComponent<IBarProps> = (props) => {
         onMouseEnter: attr.onMouseEnter,
         onMouseLeave: attr.onMouseLeave,
       }}>
-      {"document" in globalThis ?
-        ReactDOM.createPortal((
-          <>
-            {props.data.map((v: any, i: number, g: any[]) => {
-              return (
-                <rect
-                  key={`${props.className}-${i}`}
-                  className={`${props.className}`}
-                  x={`${attr.xScale(v[props.xKey]) - attr.width / 2}px`}
-                  y={`${attr.yScale(v[props.yKey])}px`}
-                  width={`${attr.width}px`}
-                  height={`${areaCtx.height - (areaCtx.padding.top + areaCtx.padding.bottom) - attr.yScale(v[props.yKey])}px`}
-                  fill={attr.fill}
-                  opacity={attr.opacity}
-                  onClick={() => attr.onClick(v, i, g)}
-                  onMouseEnter={() => attr.onMouseEnter(v, i, g)}
-                  onMouseLeave={() => attr.onMouseLeave(v, i, g)}
-                />
-              );
-            })}
-          </>
-        ),
-          document.querySelector(`${stringHelper.className2Classes(areaCtx.className)} > .data`)!)
-        : null
-      }
+      <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .data`}>
+        {props.data.map((v: any, i: number, g: any[]) => {
+          return (
+            <rect
+              key={`${props.className}-${i}`}
+              className={`${props.className}`}
+              x={`${attr.xScale(v[props.xKey]) - attr.width / 2}px`}
+              y={`${attr.yScale(v[props.yKey])}px`}
+              width={`${attr.width}px`}
+              height={`${areaCtx.height - (areaCtx.padding.top + areaCtx.padding.bottom) - attr.yScale(v[props.yKey])}px`}
+              fill={attr.fill}
+              opacity={attr.opacity}
+              onClick={() => attr.onClick(v, i, g)}
+              onMouseEnter={() => attr.onMouseEnter(v, i, g)}
+              onMouseLeave={() => attr.onMouseLeave(v, i, g)}
+            />
+          );
+        })}
+      </Portal>
       {props.children}
     </ShapeContext.Provider>
   );
