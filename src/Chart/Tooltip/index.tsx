@@ -2,6 +2,8 @@ import * as React from "react";
 
 import styled from "styled-components";
 
+import Portal from "../../Portal";
+
 import ShapeContext from "../Shape/context";
 import AreaContext from "../Area/context";
 
@@ -52,14 +54,39 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
     };
   }, [mouseMoveHandler]);
 
+  const xLine = props.xLine ?? true;
+  const yLine = props.yLine ?? true;
+
   return (
-    <props.component
-      className={props.className!}
-      nearData={nearData}
-      hover={hover}
-      x={shapeCtx.xScale(nearData[shapeCtx.xKey])}
-      y={shapeCtx.yScale(nearData[shapeCtx.yKey])}
-    />
+    <>
+      <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .data-before`}>
+        <line
+          x1={shapeCtx.xScale(nearData[shapeCtx.xKey])}
+          x2={shapeCtx.xScale(nearData[shapeCtx.xKey])}
+          y1={areaCtx.padding.top}
+          y2={areaCtx.padding.top + shapeCtx.height}
+          stroke="#888"
+          opacity={hover && xLine ? 1 : 0}
+        />
+        <line
+          x1={areaCtx.padding.left}
+          x2={areaCtx.padding.left + shapeCtx.width}
+          y1={shapeCtx.yScale(nearData[shapeCtx.yKey])}
+          y2={shapeCtx.yScale(nearData[shapeCtx.yKey])}
+          stroke="#888"
+          opacity={hover && yLine ? 1 : 0}
+        />
+      </Portal>
+      <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .tooltip`}>
+        <props.component
+          className={props.className!}
+          nearData={nearData}
+          hover={hover}
+          x={shapeCtx.xScale(nearData[shapeCtx.xKey])}
+          y={shapeCtx.yScale(nearData[shapeCtx.yKey])}
+        />
+      </Portal>
+    </>
   );
 };
 

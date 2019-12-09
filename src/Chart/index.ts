@@ -3,6 +3,7 @@ import Axis from "./Axis";
 import Grid from "./Grid";
 import Shape from "./Shape";
 import Tooltip from "./Tooltip";
+import RefLine from "./RefLine";
 
 export default {
   Area,
@@ -10,4 +11,5 @@ export default {
   Grid,
   Shape,
   Tooltip,
+  RefLine,
 };
