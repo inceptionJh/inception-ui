@@ -34,9 +34,8 @@ const XAxis: React.FunctionComponent<IXAxisProps> = (props) => {
           >
             <line y2="5" stroke="#000" />
             <text
-              y="5"
+              y="15"
               textAnchor="middle"
-              dominantBaseline="hanging"
               fontSize="10"
             >
               {props.tickFormat ? props.tickFormat(v, i, g.map((t) => t)) : v.valueOf()}

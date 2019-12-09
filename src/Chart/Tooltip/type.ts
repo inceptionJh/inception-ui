@@ -8,5 +8,7 @@ export interface ITooltipComponentProps {
 
 export interface ITooltipProps {
   className?: string;
+  xLine?: boolean;
+  yLine?: boolean;
   component: React.FunctionComponent<ITooltipComponentProps>;
 }

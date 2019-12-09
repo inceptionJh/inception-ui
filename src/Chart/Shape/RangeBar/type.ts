@@ -1,6 +1,6 @@
-export interface IRangeBarProps<D = any> {
+export interface IRangeBarProps {
   className?: string;
-  data: D[];
+  data: any[];
   xKey: string;
   yKey: string;
   yMinKey: string;
@@ -11,7 +11,7 @@ export interface IRangeBarProps<D = any> {
   opacity?: string;
   xScale: d3.ScaleLinear<number, number>;
   yScale: d3.ScaleLinear<number, number>;
-  onClick?: (v: D, i: number, g: D[]) => void;
-  onMouseEnter?: (v: D, i: number, g: D[]) => void;
-  onMouseLeave?: (v: D, i: number, g: D[]) => void;
+  onClick?: (v: any, i: number, g: any[]) => void;
+  onMouseEnter?: (v: any, i: number, g: any[]) => void;
+  onMouseLeave?: (v: any, i: number, g: any[]) => void;
 }

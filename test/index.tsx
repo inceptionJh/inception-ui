@@ -5,63 +5,55 @@ import * as d3 from "d3";
 
 import { Chart } from "../src";
 
-import dateHelper from "../src/utils/date";
-
 import { ITooltipComponentProps } from "../src/Chart/Tooltip/type";
 
 const Tootip: React.FunctionComponent<ITooltipComponentProps> = (props) => {
   return (
-    <g transform={`translate(${props.x} ${props.y})`} opacity={props.hover ? 1 : 0}>
-      <text>test</text>
-    </g>
+    <>
+      <g transform={`translate(${props.x} ${props.y})`} opacity={props.hover ? 1 : 0}>
+        <circle r={5} fill="#0071e2" stroke="#0071e2" strokeWidth="2" />
+        <rect x="-30" y="10" width="60" height="20" stroke="#0071e2" fill="#fff" rx="10" ry="10" />
+        <text y="21" fill="#0071e2" textAnchor="middle" dominantBaseline="middle" fontSize="10">{(props.nearData.price / 10000).toLocaleString()} 만원</text>
+      </g>
+      <text
+        transform={`translate(${props.x} ${470})`}
+        y={15}
+        fontSize="10"
+        textAnchor="middle"
+        opacity={props.hover ? 1 : 0}
+      >
+        {props.nearData.areaSize}㎡
+      </text>
+    </>
   );
 };
 
-const minMaxData = [
-  { date: new Date(`2018-01-01`), maxPrice: 150000000, minPrice: 100000000 },
-  { date: new Date(`2018-02-01`), maxPrice: 180000000, minPrice: 150000000 },
-  { date: new Date(`2018-03-01`), maxPrice: 170000000, minPrice: 150000000 },
-  { date: new Date(`2018-04-01`), maxPrice: 175000000, minPrice: 125000000 },
-  { date: new Date(`2018-05-01`), maxPrice: 175000000, minPrice: 135000000 },
-  { date: new Date(`2018-06-01`), maxPrice: 180000000, minPrice: 140000000 },
-].map((v) => ({ ...v, date: v.date.valueOf() }));
-
 const data1 = [
-  { date: new Date(`2018-01-01`), price: 150000000 },
-  { date: new Date(`2018-02-01`), price: 180000000 },
-  { date: new Date(`2018-03-01`), price: 170000000 },
-  { date: new Date(`2018-04-01`), price: 175000000 },
-  { date: new Date(`2018-05-01`), price: 175000000 },
-  { date: new Date(`2018-06-01`), price: 180000000 },
-].map((v) => ({ ...v, date: v.date.valueOf() }));
-
-const data2 = data1.map((v) => ({ ...v, price: v.price * 0.8 }));
-const data3 = data2.concat([{ ...data2[2], price: data2[2].price + 10000000 }]);
+  { areaSize: 162.6, price: 15000000 },
+  { areaSize: 168.6, price: 18000000 },
+  { areaSize: 174.6, price: 17000000 },
+  { areaSize: 179.6, price: 17500000 },
+  { areaSize: 181.6, price: 17500000 },
+  { areaSize: 197.4, price: 18000000 },
+];
 
 const Test: React.FunctionComponent = (props) => {
-  const [data, setData] = React.useState(minMaxData);
+  const [data, setData] = React.useState(data1);
 
   const padding = { top: 0, right: 0, bottom: 30, left: 50 };
 
-  const startDate = new Date(data[0].date);
-  startDate.setMonth(startDate.getMonth() - 1);
-
-  const endDate = new Date(data[data.length - 1].date);
-  endDate.setMonth(endDate.getMonth() + 1);
-
-  const xDomain = [data[0].date, data[data.length - 1].date];
-  const xRange = [0 + padding.left + 20, 500 - padding.right - 20];
+  const xDomain = d3.extent(data, (d) => d.areaSize) as [number, number];
+  const xRange = [0 + padding.left, 500 - padding.right];
 
   const xScale = d3.scaleLinear();
   xScale.domain(xDomain);
   xScale.range(xRange);
 
   const xTicks = React.useMemo(() => {
-    return dateHelper.generateDateList(new Date(data[0].date), new Date(data[data.length - 1].date), "month").map((v) => v.valueOf());
+    return d3.extent(data, (d) => d.areaSize) as [number, number];
   }, [data]);
 
-  const [yMin, yMax] = [100000000, 200000000];
-  // const [yMin, yMax] = d3.extent(data.map((v) => v.price));
+  const [yMin, yMax] = [10000000, 20000000];
   const yDiff = yMax - yMin;
   const yGap = Math.round(yDiff / 5 / Math.pow(10, `${yDiff}`.length - 2)) * Math.pow(10, `${yDiff}`.length - 2);
   const yDomain = [yMax + yGap, yMin - yGap] as [number, number];
@@ -86,28 +78,38 @@ const Test: React.FunctionComponent = (props) => {
       height={500}
       padding={padding}
     >
-      <Chart.Shape.RangeBar
+
+      <Chart.Shape.Scatter
         data={data}
-        xKey="date"
-        yKey="maxPrice"
-        yMinKey="minPrice"
-        yMaxKey="maxPrice"
+        xKey="areaSize"
+        yKey="price"
         xScale={xScale}
         yScale={yScale}
+        r="5"
+        stroke="#a7c3de"
+        strokeWidth="2"
+        fill="#fff"
       >
+        <Chart.Tooltip yLine={false} component={(p) => <Tootip {...p} />} />
+
         <Chart.Grid
           xTicks={xTicks}
           yTicks={yTicks}
         />
         <Chart.Axis.X
           ticks={xTicks}
-          tickFormat={(d) => new Date(d).toJSON().slice(0, 7)}
+          tickFormat={(d) => `${d}㎡`}
         />
         <Chart.Axis.Y
           ticks={yTicks}
+          tickFormat={(d: number) => `${(d / 10000000).toLocaleString()}억`}
         />
-        <Chart.Tooltip component={(p) => <Tootip {...p} />} />
-      </Chart.Shape.RangeBar>
+        <Chart.RefLine
+          a={39729.88505747126}
+          b={10000000}
+          stroke="#0071e2"
+        />
+      </Chart.Shape.Scatter>
     </Chart.Area>
   );
 };
