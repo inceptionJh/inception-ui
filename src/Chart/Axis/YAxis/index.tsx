@@ -35,8 +35,8 @@ const YAxis: React.FunctionComponent<IYAxisProps> = (props) => {
             <line x2="-5" stroke="#000" />
             <text
               x="-7"
+              y="4"
               textAnchor="end"
-              dominantBaseline="middle"
               fontSize="10"
             >
               {props.tickFormat ? props.tickFormat(d, i, g.map((v) => v)) : d.valueOf()}

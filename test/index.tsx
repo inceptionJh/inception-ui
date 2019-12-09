@@ -17,10 +17,10 @@ const Tootip: React.FunctionComponent<ITooltipComponentProps> = (props) => {
       </g>
       <text
         transform={`translate(${props.x} ${470})`}
-        y={5}
+        y={15}
         fontSize="10"
         textAnchor="middle"
-        dominantBaseline="hanging"
+        opacity={props.hover ? 1 : 0}
       >
         {props.nearData.areaSize}㎡
       </text>
@@ -105,7 +105,7 @@ const Test: React.FunctionComponent = (props) => {
           tickFormat={(d: number) => `${(d / 10000000).toLocaleString()}억`}
         />
         <Chart.RefLine
-          a={40229.88505747126}
+          a={39729.88505747126}
           b={10000000}
           stroke="#0071e2"
         />
