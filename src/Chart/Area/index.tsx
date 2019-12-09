@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import shortid from "shortid";
+
 import styled from "styled-components";
 
 import AreaContext from "./context";
@@ -7,19 +9,21 @@ import AreaContext from "./context";
 import { IChartAreaProps } from "./type";
 
 const Area: React.FunctionComponent<IChartAreaProps> = (props) => {
+  const [shortID] = React.useState(shortid.generate());
+
   const padding = props.padding ?? { top: 0, right: 0, bottom: 0, left: 0 };
 
   return (
     <AreaContext.Provider
       value={{
-        className: props.className!,
+        className: `${props.className} ${shortID}`,
         width: props.width,
         height: props.height,
         padding,
       }}
     >
       <svg
-        className={props.className}
+        className={`${props.className} ${shortID}`}
         width={props.width}
         height={props.height}
       >
