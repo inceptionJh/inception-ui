@@ -14,7 +14,7 @@ import { IBarProps } from "./type";
 const Bar: React.FunctionComponent<IBarProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
 
-  const attr = React.useMemo(() => {
+  const $ = React.useMemo(() => {
     return {
       width: props.width ?? 10,
       fill: props.fill ?? "#777",
@@ -53,28 +53,30 @@ const Bar: React.FunctionComponent<IBarProps> = (props) => {
       value={{
         type: "bar",
         data: props.data,
-        xScale: attr.xScale,
-        yScale: attr.yScale,
+        xScale: $.xScale,
+        yScale: $.yScale,
         width, height,
         xKey: props.xKey, yKey: props.yKey,
-        onMouseEnter: attr.onMouseEnter,
-        onMouseLeave: attr.onMouseLeave,
+        onMouseEnter: $.onMouseEnter,
+        onMouseLeave: $.onMouseLeave,
       }}>
       <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .data`}>
         {props.data.map((v: any, i: number, g: any[]) => {
+          const barHeight = Math.abs($.yScale.range()[0] - $.yScale.range()[1]) - Math.abs($.yScale.range()[0] - $.yScale(v[props.yKey]));
+
           return (
             <rect
               key={`${props.className}-${i}`}
               className={`${props.className}`}
-              x={`${attr.xScale(v[props.xKey]) - attr.width / 2}px`}
-              y={`${attr.yScale(v[props.yKey])}px`}
-              width={`${attr.width}px`}
-              height={`${areaCtx.height - (areaCtx.padding.top + areaCtx.padding.bottom) - attr.yScale(v[props.yKey])}px`}
-              fill={attr.fill}
-              opacity={attr.opacity}
-              onClick={() => attr.onClick(v, i, g)}
-              onMouseEnter={() => attr.onMouseEnter(v, i, g)}
-              onMouseLeave={() => attr.onMouseLeave(v, i, g)}
+              x={`${$.xScale(v[props.xKey]) - $.width / 2}px`}
+              y={`${$.yScale(v[props.yKey])}px`}
+              width={`${$.width}px`}
+              height={`${barHeight}px`}
+              fill={$.fill}
+              opacity={$.opacity}
+              onClick={() => $.onClick(v, i, g)}
+              onMouseEnter={() => $.onMouseEnter(v, i, g)}
+              onMouseLeave={() => $.onMouseLeave(v, i, g)}
             />
           );
         })}

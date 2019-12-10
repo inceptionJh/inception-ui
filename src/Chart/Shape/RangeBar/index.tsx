@@ -14,7 +14,7 @@ import { IRangeBarProps } from "./type";
 const RangeBar: React.FunctionComponent<IRangeBarProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
 
-  const attr = React.useMemo(() => {
+  const $ = React.useMemo(() => {
     return {
       width: props.width ?? 10,
       fill: props.fill ?? "#777",
@@ -53,33 +53,33 @@ const RangeBar: React.FunctionComponent<IRangeBarProps> = (props) => {
       value={{
         type: "range-bar",
         data: props.data,
-        xScale: attr.xScale,
-        yScale: attr.yScale,
+        xScale: $.xScale,
+        yScale: $.yScale,
         width, height,
         xKey: props.xKey,
         yKey: props.yKey,
         yMinKey: props.yMinKey,
         yMaxKey: props.yMaxKey,
-        onMouseEnter: attr.onMouseEnter,
-        onMouseLeave: attr.onMouseLeave,
+        onMouseEnter: $.onMouseEnter,
+        onMouseLeave: $.onMouseLeave,
       }}>
       <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .data`}>
         {props.data.map((v: any, i: number, g: any[]) => {
-          const barHeight = Math.abs(attr.yScale(v[props.yMaxKey]) - attr.yScale(v[props.yMinKey]));
+          const barHeight = Math.abs($.yScale(v[props.yMaxKey]) - $.yScale(v[props.yMinKey]));
 
           return (
             <rect
               key={`${props.className}-${i}`}
               className={`${props.className}`}
-              x={`${attr.xScale(v[props.xKey]) - attr.width / 2}px`}
-              y={`${attr.yScale(v[props.yMinKey]) - barHeight}px`}
-              width={`${attr.width}px`}
+              x={`${$.xScale(v[props.xKey]) - $.width / 2}px`}
+              y={`${$.yScale(v[props.yMaxKey])}px`}
+              width={`${$.width}px`}
               height={`${barHeight}px`}
-              fill={attr.fill}
-              opacity={attr.opacity}
-              onClick={() => attr.onClick(v, i, g)}
-              onMouseEnter={() => attr.onMouseEnter(v, i, g)}
-              onMouseLeave={() => attr.onMouseLeave(v, i, g)}
+              fill={$.fill}
+              opacity={$.opacity}
+              onClick={() => $.onClick(v, i, g)}
+              onMouseEnter={() => $.onMouseEnter(v, i, g)}
+              onMouseLeave={() => $.onMouseLeave(v, i, g)}
             />
           );
         })}

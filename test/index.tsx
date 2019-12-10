@@ -6,12 +6,12 @@ import * as d3 from "d3";
 import { Chart } from "../src";
 
 const _data = [
-  { areaSize: 162.6, price: 15000000 },
-  { areaSize: 168.6, price: 18000000 },
-  { areaSize: 174.6, price: 17000000 },
-  { areaSize: 179.6, price: 17500000 },
-  { areaSize: 181.6, price: 17500000 },
-  { areaSize: 197.4, price: 18000000 },
+  { areaSize: 162.6, maxPrice: 15000000, minPrice: 12000000 },
+  { areaSize: 168.6, maxPrice: 18000000, minPrice: 15000000 },
+  { areaSize: 174.6, maxPrice: 17000000, minPrice: 15000000 },
+  { areaSize: 179.6, maxPrice: 17500000, minPrice: 12500000 },
+  { areaSize: 181.6, maxPrice: 17500000, minPrice: 13500000 },
+  { areaSize: 197.4, maxPrice: 18000000, minPrice: 15000000 },
 ];
 
 const Test: React.FunctionComponent = (props) => {
@@ -23,7 +23,7 @@ const Test: React.FunctionComponent = (props) => {
   const padding = { top: 0, right: 0, bottom: 30, left: 50 };
 
   const xDomain = d3.extent(data, (d) => d.areaSize) as [number, number];
-  const xRange = [0 + padding.left, width - padding.right];
+  const xRange = [0 + padding.left + 20, width - padding.right - 20];
 
   const xScale = d3.scaleLinear();
   xScale.domain(xDomain);
@@ -58,19 +58,19 @@ const Test: React.FunctionComponent = (props) => {
       height={height}
       padding={padding}
     >
-      <Chart.Shape.Line
+      <Chart.Shape.RangeBar
         data={data}
         xKey="areaSize"
-        yKey="price"
+        yKey="maxPrice"
+        yMinKey="minPrice"
+        yMaxKey="maxPrice"
         xScale={xScale}
         yScale={yScale}
-        stroke="#a7c3de"
-        strokeWidth="2"
       >
         <Chart.Grid xTicks={xTicks} yTicks={yTicks} />
         <Chart.Axis.X ticks={xTicks} />
         <Chart.Axis.Y ticks={yTicks} />
-      </Chart.Shape.Line>
+      </Chart.Shape.RangeBar>
     </Chart.Area>
   );
 };
