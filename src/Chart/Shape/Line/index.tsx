@@ -24,8 +24,6 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
       strokeWidth: props.strokeWidth ?? "1",
       strokeDasharray: props.strokeDasharray,
       opacity: props.opacity ?? "1",
-      xScale: props.xScale,
-      yScale: props.yScale,
     };
   }, [
     props.data,
@@ -33,12 +31,20 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
     props.strokeWidth,
     props.strokeDasharray,
     props.opacity,
-    props.xScale,
-    props.yScale,
   ]);
 
   const path = React.useMemo(() => {
-    return d3.line().x((d) => $.xScale(d[0])).y((d) => $.yScale(d[1])).curve(d3[$.type])(props.data.map((d) => [d[props.xKey], d[props.yKey]] as [number, number]));
+    if (props.data.length === 0) return "";
+
+    return [
+      `M${areaCtx.padding.left}, ${props.yScale(props.data[0][props.yKey])}`,
+      d3.line()
+        .x((d) => props.xScale(d[0]))
+        .y((d) => props.yScale(d[1]))
+        .curve(d3[$.type])(props.data.map((d) => [d[props.xKey], d[props.yKey]] as [number, number]))!
+        .replace(/^M/, "L"),
+      `L${areaCtx.width - areaCtx.padding.right}, ${props.yScale(props.data[props.data.length - 1][props.yKey])}`,
+    ].join();
   }, [props.data]);
 
   const width = areaCtx.width - (areaCtx.padding.left + areaCtx.padding.right);
@@ -57,8 +63,8 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
       value={{
         type: $.type,
         data: props.data,
-        xScale: $.xScale,
-        yScale: $.yScale,
+        xScale: props.xScale,
+        yScale: props.yScale,
         width, height,
         xKey: props.xKey, yKey: props.yKey,
       }}>
