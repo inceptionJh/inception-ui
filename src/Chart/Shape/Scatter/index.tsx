@@ -51,7 +51,7 @@ const Scatter: React.FunctionComponent<IScatterProps> = (props) => {
   return (
     <ShapeContext.Provider
       value={{
-        type: "step-line",
+        type: "scatter",
         data: props.data,
         xScale: attr.xScale,
         yScale: attr.yScale,
