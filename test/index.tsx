@@ -5,30 +5,7 @@ import * as d3 from "d3";
 
 import { Chart } from "../src";
 
-import { ITooltipComponentProps } from "../src/Chart/Tooltip/type";
-
-const Tootip: React.FunctionComponent<ITooltipComponentProps> = (props) => {
-  return (
-    <>
-      <g transform={`translate(${props.x} ${props.y})`} opacity={props.hover ? 1 : 0}>
-        <circle r={5} fill="#0071e2" stroke="#0071e2" strokeWidth="2" />
-        <rect x="-30" y="10" width="60" height="20" stroke="#0071e2" fill="#fff" rx="10" ry="10" />
-        <text y="21" fill="#0071e2" textAnchor="middle" dominantBaseline="middle" fontSize="10">{(props.nearData.price / 10000).toLocaleString()} 만원</text>
-      </g>
-      <text
-        transform={`translate(${props.x} ${470})`}
-        y={15}
-        fontSize="10"
-        textAnchor="middle"
-        opacity={props.hover ? 1 : 0}
-      >
-        {props.nearData.areaSize}㎡
-      </text>
-    </>
-  );
-};
-
-const data1 = [
+const _data = [
   { areaSize: 162.6, price: 15000000 },
   { areaSize: 168.6, price: 18000000 },
   { areaSize: 174.6, price: 17000000 },
@@ -38,12 +15,15 @@ const data1 = [
 ];
 
 const Test: React.FunctionComponent = (props) => {
-  const [data, setData] = React.useState(data1);
+  const [data, setData] = React.useState(_data);
+
+  const width = 500;
+  const height = 500;
 
   const padding = { top: 0, right: 0, bottom: 30, left: 50 };
 
   const xDomain = d3.extent(data, (d) => d.areaSize) as [number, number];
-  const xRange = [0 + padding.left, 500 - padding.right];
+  const xRange = [0 + padding.left, width - padding.right];
 
   const xScale = d3.scaleLinear();
   xScale.domain(xDomain);
@@ -57,7 +37,7 @@ const Test: React.FunctionComponent = (props) => {
   const yDiff = yMax - yMin;
   const yGap = Math.round(yDiff / 5 / Math.pow(10, `${yDiff}`.length - 2)) * Math.pow(10, `${yDiff}`.length - 2);
   const yDomain = [yMax + yGap, yMin - yGap] as [number, number];
-  const yRange = [padding.top + 20, 500 - padding.bottom - 20];
+  const yRange = [padding.top + 20, height - padding.bottom - 20];
 
   const yTicks = React.useMemo(() => {
     const ticks = [] as number[];
@@ -74,42 +54,23 @@ const Test: React.FunctionComponent = (props) => {
 
   return (
     <Chart.Area
-      width={500}
-      height={500}
+      width={width}
+      height={height}
       padding={padding}
     >
-
-      <Chart.Shape.Scatter
+      <Chart.Shape.Line
         data={data}
         xKey="areaSize"
         yKey="price"
         xScale={xScale}
         yScale={yScale}
-        r="5"
         stroke="#a7c3de"
         strokeWidth="2"
-        fill="#fff"
       >
-        <Chart.Tooltip yLine={false} component={(p) => <Tootip {...p} />} />
-
-        <Chart.Grid
-          xTicks={xTicks}
-          yTicks={yTicks}
-        />
-        <Chart.Axis.X
-          ticks={xTicks}
-          tickFormat={(d) => `${d}㎡`}
-        />
-        <Chart.Axis.Y
-          ticks={yTicks}
-          tickFormat={(d: number) => `${(d / 10000000).toLocaleString()}억`}
-        />
-        <Chart.RefLine
-          a={39729.88505747126}
-          b={10000000}
-          stroke="#0071e2"
-        />
-      </Chart.Shape.Scatter>
+        <Chart.Grid xTicks={xTicks} yTicks={yTicks} />
+        <Chart.Axis.X ticks={xTicks} />
+        <Chart.Axis.Y ticks={yTicks} />
+      </Chart.Shape.Line>
     </Chart.Area>
   );
 };

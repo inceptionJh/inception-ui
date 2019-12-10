@@ -16,14 +16,14 @@ const Area: React.FunctionComponent<IChartAreaProps> = (props) => {
   return (
     <AreaContext.Provider
       value={{
-        className: `${props.className} ${shortID}`,
+        className: `${props.className} _${shortID}`,
         width: props.width,
         height: props.height,
         padding,
       }}
     >
       <svg
-        className={`${props.className} ${shortID}`}
+        className={`${props.className} _${shortID}`}
         width={props.width}
         height={props.height}
       >
