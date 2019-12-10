@@ -40,14 +40,6 @@ const Bar: React.FunctionComponent<IBarProps> = (props) => {
   const width = areaCtx.width - (areaCtx.padding.left + areaCtx.padding.right);
   const height = areaCtx.height - (areaCtx.padding.top + areaCtx.padding.bottom);
 
-  const [render, setRender] = React.useState(false);
-
-  React.useEffect(() => {
-    setRender(true);
-  }, []);
-
-  if (!render) return null;
-
   return (
     <ShapeContext.Provider
       value={{
