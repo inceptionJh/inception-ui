@@ -1,7 +1,11 @@
 import * as d3 from "d3";
 
+import lineTypeMapper from "./Line/mapper";
+
+type LineType = ((typeof lineTypeMapper.type) extends { [key: string]: infer T } ? T : never);
+
 export type TShapeContext = {
-  type: "scatter" | "bar" | "line" | "step-line";
+  type: "scatter" | "bar" | LineType;
   data: any[];
   xKey: string;
   yKey: string;

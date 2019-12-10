@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import * as d3 from "d3";
+
 import styled from "styled-components";
 
 import Portal from "../../../Portal";
@@ -8,14 +10,16 @@ import AreaContext from "../../Area/context";
 import ShapeContext from "../context";
 
 import stringHelper from "../../../utils/string";
+import mapper from "./mapper";
 
 import { ILineProps } from "./type";
 
 const Line: React.FunctionComponent<ILineProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
 
-  const attr = React.useMemo(() => {
+  const $ = React.useMemo(() => {
     return {
+      type: mapper.type[props.type ?? "linear"],
       stroke: props.stroke ?? "#777",
       strokeWidth: props.strokeWidth ?? "1",
       strokeDasharray: props.strokeDasharray,
@@ -33,9 +37,9 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
     props.yScale,
   ]);
 
-  const path = props.data.map((d: any, i: number) => {
-    return `${i === 0 ? "M" : "L"}${attr.xScale(d[props.xKey])} ${attr.yScale(d[props.yKey])}`;
-  }).join(",");
+  const path = React.useMemo(() => {
+    return d3.line().x((d) => $.xScale(d[0])).y((d) => $.yScale(d[1])).curve(d3[$.type])(props.data.map((d) => [d[props.xKey], d[props.yKey]] as [number, number]));
+  }, [props.data]);
 
   const width = areaCtx.width - (areaCtx.padding.left + areaCtx.padding.right);
   const height = areaCtx.height - (areaCtx.padding.top + areaCtx.padding.bottom);
@@ -51,10 +55,10 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
   return (
     <ShapeContext.Provider
       value={{
-        type: "line",
+        type: $.type,
         data: props.data,
-        xScale: attr.xScale,
-        yScale: attr.yScale,
+        xScale: $.xScale,
+        yScale: $.yScale,
         width, height,
         xKey: props.xKey, yKey: props.yKey,
       }}>
@@ -63,11 +67,11 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
           key={`${props.className}`}
           className={`${props.className}`}
           fill="transparent"
-          d={path}
-          stroke={attr.stroke}
-          strokeWidth={attr.strokeWidth}
-          strokeDasharray={attr.strokeDasharray}
-          opacity={attr.opacity}
+          d={path ?? undefined}
+          stroke={$.stroke}
+          strokeWidth={$.strokeWidth}
+          strokeDasharray={$.strokeDasharray}
+          opacity={$.opacity}
         />
       </Portal>
       {props.children}
