@@ -9,6 +9,12 @@ export interface ITooltipComponentProps {
 export interface ITooltipProps {
   className?: string;
   xLine?: boolean;
+  xLineStroke?: string;
+  xLineStrokeWidth?: string;
+  xLineStrokeDasharray?: string;
   yLine?: boolean;
+  yLineStroke?: string;
+  yLineStrokeWidth?: string;
+  yLineStrokeDasharray?: string;
   component: React.FunctionComponent<ITooltipComponentProps>;
 }
