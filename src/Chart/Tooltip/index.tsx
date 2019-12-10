@@ -86,7 +86,9 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
               x2={shapeCtx.xScale(nearData[shapeCtx.xKey])}
               y1={areaCtx.padding.top}
               y2={areaCtx.padding.top + shapeCtx.height}
-              stroke="#888"
+              stroke={$.xLineStroke}
+              strokeWidth={$.xLineStrokeWidth}
+              strokeDasharray={$.xLineStrokeDasharray}
               opacity={hover ? 1 : 0}
             />
           )
@@ -100,7 +102,9 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
               x2={areaCtx.padding.left + shapeCtx.width}
               y1={shapeCtx.yScale(nearData[shapeCtx.yKey])}
               y2={shapeCtx.yScale(nearData[shapeCtx.yKey])}
-              stroke="#888"
+              stroke={$.yLineStroke}
+              strokeWidth={$.yLineStrokeWidth}
+              strokeDasharray={$.yLineStrokeDasharray}
               opacity={hover ? 1 : 0}
             />
           )
