@@ -54,29 +54,60 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
     };
   }, [mouseMoveHandler]);
 
-  const xLine = props.xLine ?? true;
-  const yLine = props.yLine ?? true;
+  const $ = React.useMemo(() => {
+    return {
+      xLine: props.xLine ?? true,
+      xLineStroke: props.xLineStroke ?? "#888",
+      xLineStrokeWidth: props.xLineStrokeWidth ?? "1",
+      xLineStrokeDasharray: props.xLineStrokeDasharray ?? "",
+      yLine: props.yLine ?? true,
+      yLineStroke: props.xLineStroke ?? "#888",
+      yLineStrokeWidth: props.xLineStrokeWidth ?? "1",
+      yLineStrokeDasharray: props.xLineStrokeDasharray ?? "",
+    };
+  }, [
+    props.xLine,
+    props.xLineStroke,
+    props.xLineStrokeWidth,
+    props.xLineStrokeDasharray,
+    props.yLine,
+    props.yLineStroke,
+    props.yLineStrokeWidth,
+    props.yLineStrokeDasharray,
+  ]);
 
   return (
     <>
       <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .data-before`}>
-        <line
-          x1={shapeCtx.xScale(nearData[shapeCtx.xKey])}
-          x2={shapeCtx.xScale(nearData[shapeCtx.xKey])}
-          y1={areaCtx.padding.top}
-          y2={areaCtx.padding.top + shapeCtx.height}
-          stroke="#888"
-          opacity={hover && xLine ? 1 : 0}
-        />
-        <line
-          x1={areaCtx.padding.left}
-          x2={areaCtx.padding.left + shapeCtx.width}
-          y1={shapeCtx.yScale(nearData[shapeCtx.yKey])}
-          y2={shapeCtx.yScale(nearData[shapeCtx.yKey])}
-          stroke="#888"
-          opacity={hover && yLine ? 1 : 0}
-        />
+        {$.xLine
+          ? (
+            <line
+              x1={shapeCtx.xScale(nearData[shapeCtx.xKey])}
+              x2={shapeCtx.xScale(nearData[shapeCtx.xKey])}
+              y1={areaCtx.padding.top}
+              y2={areaCtx.padding.top + shapeCtx.height}
+              stroke="#888"
+              opacity={hover ? 1 : 0}
+            />
+          )
+          : null
+        }
+
+        {$.yLine
+          ? (
+            <line
+              x1={areaCtx.padding.left}
+              x2={areaCtx.padding.left + shapeCtx.width}
+              y1={shapeCtx.yScale(nearData[shapeCtx.yKey])}
+              y2={shapeCtx.yScale(nearData[shapeCtx.yKey])}
+              stroke="#888"
+              opacity={hover ? 1 : 0}
+            />
+          )
+          : null
+        }
       </Portal>
+
       <Portal selector={`${stringHelper.className2Classes(areaCtx.className)} > .tooltip`}>
         <props.component
           className={props.className!}
