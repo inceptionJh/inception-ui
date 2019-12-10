@@ -30,6 +30,7 @@ const Area: React.FunctionComponent<IChartAreaProps> = (props) => {
         <g className="grid"></g>
         <g className="x-axis"></g>
         <g className="y-axis"></g>
+        <g className="legend"></g>
         <g className="data-before"></g>
         <g className="data"></g>
         <g className="data-after"></g>
