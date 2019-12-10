@@ -4,6 +4,7 @@ import Grid from "./Grid";
 import Shape from "./Shape";
 import Tooltip from "./Tooltip";
 import RefLine from "./RefLine";
+import Legend from "./Legend";
 
 export default {
   Area,
@@ -12,4 +13,5 @@ export default {
   Shape,
   Tooltip,
   RefLine,
+  Legend,
 };
