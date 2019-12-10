@@ -5,13 +5,22 @@ import styled from "styled-components";
 
 import { IPotalProps } from "./type";
 
-const Potal: React.FunctionComponent<IPotalProps> = (props) => {
+const Portal: React.FunctionComponent<IPotalProps> = (props) => {
+  const target = document.querySelector(props.selector);
+
+  const [render, setRender] = React.useState(false);
+
+  React.useEffect(() => {
+    setRender(true);
+  }, []);
+
+  if (!render) return null;
+
+  if (target === null) return null;
+
   return (
-    ReactDOM.createPortal(
-      <>{props.children}</>,
-      document.querySelector(props.selector)!,
-    )
+    ReactDOM.createPortal(<>{props.children}</>, target)
   );
 };
 
-export default styled(Potal)``;
+export default styled(Portal)``;

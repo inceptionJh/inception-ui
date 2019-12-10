@@ -58,6 +58,7 @@ const Test: React.FunctionComponent = (props) => {
       height={height}
       padding={padding}
     >
+      <Chart.Legend component={() => null} />
       <Chart.Shape.RangeBar
         data={data}
         xKey="areaSize"
