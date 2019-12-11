@@ -1,56 +1,42 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import * as d3 from "d3";
-
 import { Chart } from "../src";
 
+const Legend: React.FunctionComponent = () => {
+  return (
+    <g transform={`translate(310 30)`}>
+      {_data.map((d, i) => {
+        return (
+          <g key={i} transform={`translate(0 ${15 * i})`}>
+            <circle r="5" fill={d.color[0]} />
+            <text x="8" y="3" fontSize="10">{d.areaSize}</text>
+          </g>
+        );
+      })}
+    </g>
+  );
+};
+
 const _data = [
-  { areaSize: 162.6, maxPrice: 15000000, minPrice: 12000000 },
-  { areaSize: 168.6, maxPrice: 18000000, minPrice: 15000000 },
-  { areaSize: 174.6, maxPrice: 17000000, minPrice: 15000000 },
-  { areaSize: 179.6, maxPrice: 17500000, minPrice: 12500000 },
-  { areaSize: 181.6, maxPrice: 17500000, minPrice: 13500000 },
-  { areaSize: 197.4, maxPrice: 18000000, minPrice: 15000000 },
+  { areaSize: 162.6, maxPrice: 1500000, minPrice: 12000000, color: ["#fcc", "#fdd"] },
+  { areaSize: 168.6, maxPrice: 5800000, minPrice: 15000000, color: ["#f99", "#fcc"] },
+  { areaSize: 179.6, maxPrice: 10500000, minPrice: 12500000, color: ["#f55", "#f99"] },
+  { areaSize: 181.6, maxPrice: 17500000, minPrice: 13500000, color: ["#f00", "#f55"] },
+  { areaSize: 197.4, maxPrice: 18000000, minPrice: 15000000, color: ["#f00", "#fff"] },
 ];
 
-const Test: React.FunctionComponent = (props) => {
-  const [data, setData] = React.useState(_data);
+const Test: React.FunctionComponent<{ data: any[] }> = (props) => {
+  const [data, setData] = React.useState(() => props.data.sort((a, b) => a.maxPrice - b.maxPrice));
+
+  React.useEffect(() => {
+    setData(props.data);
+  }, [props.data]);
 
   const width = 500;
-  const height = 500;
+  const height = 300;
 
-  const padding = { top: 0, right: 0, bottom: 30, left: 50 };
-
-  const xDomain = d3.extent(data, (d) => d.areaSize) as [number, number];
-  const xRange = [0 + padding.left + 20, width - padding.right - 20];
-
-  const xScale = d3.scaleLinear();
-  xScale.domain(xDomain);
-  xScale.range(xRange);
-
-  const xTicks = React.useMemo(() => {
-    return d3.extent(data, (d) => d.areaSize) as [number, number];
-  }, [data]);
-
-  const [yMin, yMax] = [10000000, 20000000];
-  const yDiff = yMax - yMin;
-  const yGap = Math.round(yDiff / 5 / Math.pow(10, `${yDiff}`.length - 2)) * Math.pow(10, `${yDiff}`.length - 2);
-  const yDomain = [yMax + yGap, yMin - yGap] as [number, number];
-  const yRange = [padding.top + 20, height - padding.bottom - 20];
-
-  const yTicks = React.useMemo(() => {
-    const ticks = [] as number[];
-    for (let tick = yDomain[1]; tick <= yDomain[0];) {
-      ticks.push(tick);
-      tick += yGap;
-    }
-    return ticks;
-  }, [data]);
-
-  const yScale = d3.scaleLinear();
-  yScale.domain(yDomain);
-  yScale.range(yRange);
+  const padding = { top: 0, right: 0, bottom: 0, left: 0 };
 
   return (
     <Chart.Area
@@ -58,25 +44,19 @@ const Test: React.FunctionComponent = (props) => {
       height={height}
       padding={padding}
     >
-      <Chart.Legend component={() => null} />
-      <Chart.Shape.RangeBar
+      <Chart.Legend component={Legend} />
+      <Chart.Shape.Pie
         data={data}
-        xKey="areaSize"
-        yKey="maxPrice"
-        yMinKey="minPrice"
-        yMaxKey="maxPrice"
-        xScale={xScale}
-        yScale={yScale}
-      >
-        <Chart.Grid xTicks={xTicks} yTicks={yTicks} />
-        <Chart.Axis.X ticks={xTicks} />
-        <Chart.Axis.Y ticks={yTicks} />
-      </Chart.Shape.RangeBar>
+        valueKey="maxPrice"
+        labelKey="areaSize"
+        colorKey="color"
+        innerRadius={0.5}
+      />
     </Chart.Area>
   );
 };
 
 ReactDOM.render(
-  <Test />,
+  <Test data={_data} />,
   document.getElementById("_root"),
 );

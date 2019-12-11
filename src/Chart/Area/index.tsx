@@ -27,6 +27,7 @@ const Area: React.FunctionComponent<IChartAreaProps> = (props) => {
         width={props.width}
         height={props.height}
       >
+        <defs></defs>
         <g className="grid"></g>
         <g className="x-axis"></g>
         <g className="y-axis"></g>
