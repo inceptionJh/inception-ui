@@ -35,16 +35,15 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
 
   const path = React.useMemo(() => {
     if (props.data.length === 0) return "";
+    if (props.data.length === 1) return `M${areaCtx.padding.left}, ${props.yScale(props.data[0][props.yKey])}L${areaCtx.width - areaCtx.padding.right}, ${props.yScale(props.data[props.data.length - 1][props.yKey])}`;
 
-    return [
-      `M${areaCtx.padding.left}, ${props.yScale(props.data[0][props.yKey])}`,
-      d3.line()
-        .x((d) => props.xScale(d[0]))
-        .y((d) => props.yScale(d[1]))
-        .curve(d3[$.type])(props.data.map((d) => [d[props.xKey], d[props.yKey]] as [number, number]))!
-        .replace(/^M/, "L"),
-      `L${areaCtx.width - areaCtx.padding.right}, ${props.yScale(props.data[props.data.length - 1][props.yKey])}`,
-    ].join();
+    const pathGenerator = d3.line().curve(d3[$.type]);
+    const dataSet = [
+      [props.xScale.invert(areaCtx.padding.left), props.data[0][props.yKey]],
+      ...props.data.map((d) => [d[props.xKey], d[props.yKey]]),
+      [props.xScale.invert(areaCtx.width - areaCtx.padding.right), props.data[props.data.length - 1][props.yKey]],
+    ].map((d) => [props.xScale(d[0]), props.yScale(d[1])]) as [number, number][];
+    return pathGenerator(dataSet);
   }, [props.data]);
 
   const width = areaCtx.width - (areaCtx.padding.left + areaCtx.padding.right);
