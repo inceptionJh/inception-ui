@@ -15,14 +15,6 @@ const XAxis: React.FunctionComponent<IXAxisProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
   const shapeCtx = React.useContext(ShapeContext);
 
-  const [render, setRender] = React.useState(false);
-
-  React.useEffect(() => {
-    setRender(true);
-  }, []);
-
-  if (!render) return null;
-
   return (
     <Portal selector={`${stringHelper.className2Classes(areaCtx.className!)} > .x-axis`}>
       <path d={`M${areaCtx.padding.left} ${areaCtx.padding.top + shapeCtx.height}, l${shapeCtx.width} 0`} stroke="#000" />

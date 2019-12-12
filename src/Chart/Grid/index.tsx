@@ -45,14 +45,6 @@ const Grid: React.FunctionComponent<IGridProps> = (props) => {
     props.yStrokeOpacity,
   ]);
 
-  const [render, setRender] = React.useState(false);
-
-  React.useEffect(() => {
-    setRender(true);
-  }, []);
-
-  if (!render) return null;
-
   return (
     <Portal selector={`${stringHelper.className2Classes(areaCtx.className!)} > .grid`}>
       {attr.xLine

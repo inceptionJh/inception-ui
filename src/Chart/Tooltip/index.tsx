@@ -19,10 +19,10 @@ const Tooltip: React.FunctionComponent<ITooltipProps> = (props) => {
   const [hover, setHover] = React.useState(false);
 
   const mouseMoveHandler = React.useCallback((e: MouseEvent) => {
-    const result = shapeCtx.data.reduce((accu: any, curr: any) => {
-      const mouseX = shapeCtx.xScale.invert(e.offsetX).valueOf();
-      const mouseY = shapeCtx.yScale.invert(e.offsetY).valueOf();
+    const mouseX = shapeCtx.xScale.invert(e.offsetX).valueOf();
+    const mouseY = shapeCtx.yScale.invert(e.offsetY).valueOf();
 
+    const result = shapeCtx.data.reduce((accu: any, curr: any) => {
       const xDiffAccu = Math.abs(accu[shapeCtx.xKey] - mouseX);
       const xDiffCurr = Math.abs(curr[shapeCtx.xKey] - mouseX);
 
