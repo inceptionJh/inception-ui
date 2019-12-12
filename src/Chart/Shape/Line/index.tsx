@@ -39,10 +39,14 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
 
     const pathGenerator = d3.line().curve(d3[$.type]);
     const dataSet = [
-      [props.xScale.invert(areaCtx.padding.left), props.data[0][props.yKey]],
+      [areaCtx.padding.left, props.data[0][props.yKey]],
       ...props.data.map((d) => [d[props.xKey], d[props.yKey]]),
-      [props.xScale.invert(areaCtx.width - areaCtx.padding.right), props.data[props.data.length - 1][props.yKey]],
-    ].map((d) => [props.xScale(d[0]), props.yScale(d[1])]) as [number, number][];
+      [areaCtx.width - areaCtx.padding.right, props.data[props.data.length - 1][props.yKey]],
+    ].map((d, i, g) => {
+      if (i === 0) return [d[0], props.yScale(d[1])];
+      if (i === g.length - 1) return [d[0], props.yScale(d[1])];
+      return [props.xScale(d[0]), props.yScale(d[1])];
+    }) as [number, number][];
     return pathGenerator(dataSet);
   }, [props.data]);
 

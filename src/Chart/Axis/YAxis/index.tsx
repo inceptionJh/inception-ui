@@ -15,14 +15,6 @@ const YAxis: React.FunctionComponent<IYAxisProps> = (props) => {
   const areaCtx = React.useContext(AreaContext);
   const shapeCtx = React.useContext(ShapeContext);
 
-  const [render, setRender] = React.useState(false);
-
-  React.useEffect(() => {
-    setRender(true);
-  }, []);
-
-  if (!render) return null;
-
   return (
     <Portal selector={`${stringHelper.className2Classes(areaCtx.className!)} > .y-axis`}>
       <path d={`M${areaCtx.padding.left} ${areaCtx.padding.top}, l0 ${shapeCtx.height}`} stroke="#000" />
