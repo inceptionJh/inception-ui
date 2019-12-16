@@ -36,6 +36,7 @@ const Area: React.FunctionComponent<IChartAreaProps> = (props) => {
         <g className="data"></g>
         <g className="data-after"></g>
         <g className="tooltip"></g>
+        <g className="overlay"></g>
         {props.children}
       </svg>
     </AreaContext.Provider>
