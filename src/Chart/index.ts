@@ -5,6 +5,7 @@ import Shape from "./Shape";
 import Tooltip from "./Tooltip";
 import RefLine from "./RefLine";
 import Legend from "./Legend";
+import Overlay from "./Overlay";
 
 export default {
   Area,
@@ -14,4 +15,5 @@ export default {
   Tooltip,
   RefLine,
   Legend,
+  Overlay,
 };
