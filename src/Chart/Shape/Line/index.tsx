@@ -47,19 +47,11 @@ const Line: React.FunctionComponent<ILineProps> = (props) => {
       if (i === g.length - 1) return [d[0], props.yScale(d[1])];
       return [props.xScale(d[0]), props.yScale(d[1])];
     }) as [number, number][];
-    return pathGenerator(dataSet);
+    return pathGenerator(dataSet.slice(props.start === false ? 1 : 0, props.end === false ? dataSet.length - 1 : dataSet.length));
   }, [props.data]);
 
   const width = areaCtx.width - (areaCtx.padding.left + areaCtx.padding.right);
   const height = areaCtx.height - (areaCtx.padding.top + areaCtx.padding.bottom);
-
-  const [render, setRender] = React.useState(false);
-
-  React.useEffect(() => {
-    setRender(true);
-  }, []);
-
-  if (!render) return null;
 
   return (
     <ShapeContext.Provider

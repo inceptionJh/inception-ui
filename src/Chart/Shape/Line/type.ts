@@ -4,6 +4,8 @@ export interface ILineProps {
   data: any[];
   xKey: string;
   yKey: string;
+  start?: boolean;
+  end?: boolean;
   stroke?: string;
   strokeWidth?: string;
   strokeDasharray?: string;
