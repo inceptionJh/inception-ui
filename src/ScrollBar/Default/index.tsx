@@ -25,7 +25,8 @@ const DefaultScrollBar: React.FunctionComponent<IDefaultScrollBarProps> = (props
       const clientHeight = ref.current?.parentElement?.clientHeight ?? 0;
       ref.current?.parentElement!.onscroll = (e) => {
         const container = e.target as HTMLElement;
-        setTop(container.scrollTop / (container.scrollHeight - clientHeight) * 100);
+        const percent = container.scrollTop / (container.scrollHeight - clientHeight) * 100;
+        setTop(height * percent);
       };
     }, delay);
   }, [ref.current?.parentElement]);
@@ -34,7 +35,7 @@ const DefaultScrollBar: React.FunctionComponent<IDefaultScrollBarProps> = (props
     <div
       ref={ref}
       className={props.className}
-      style={{ height: `${height}%`, top: `${top}%` }}
+      style={{ height: `${height}%`, top: `${top}px` }}
     >
     </div>
   );
