@@ -34,7 +34,7 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
 
         if ((scrollHeight - height) * percent - 1 >= scrollHeight - height) return;
         setTop((scrollHeight - height) * percent);
-        props.onScroll ?? props.onScroll!(e);
+        props.onScroll && props.onScroll!(e);
       };
     }, delay);
   }, [clientHeight, scrollHeight, height, opacity]);
