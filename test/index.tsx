@@ -5,21 +5,15 @@ import * as ReactDOM from "react-dom";
 
 import styled from "styled-components";
 
-import { ScrollBar } from "../src";
+import ScrollBar from "../src/ScrollBar/Default";
 
 const _Test: React.FunctionComponent<{ className?: string }> = (props) => {
-  const [create, setCreate] = React.useState(false);
-
-  React.useEffect(() => {
-    setCreate(true);
-  }, []);
-
   return (
     <div className={props.className}>
       <div className="parent">
         <div className="child"></div>
-        {create ? <div className="child"></div> : null}
-        <ScrollBar.Default />
+        <div className="child"></div>
+        <ScrollBar />
       </div>
     </div>
   );
@@ -38,9 +32,7 @@ const Test = styled(_Test)`
     height: 200px;
     overflow: auto;
     -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-      display: none !important;
-    }
+    &::-webkit-scrollbar { display: none !important; }
   }
 
   .child {

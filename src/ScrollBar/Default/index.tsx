@@ -23,8 +23,8 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
   React.useEffect(() => {
     const delay = (props.delay ?? 0) + 50;
     const h = clientHeight / scrollHeight * clientHeight;
-    setTimeout(() => setHeight(isNaN(h) ? 0 : h), delay);
-  }, [clientHeight, scrollHeight]);
+    setTimeout(() => setHeight(isNaN(h) ? 1 : h), delay);
+  }, [clientHeight, scrollHeight, opacity]);
 
   React.useEffect(() => {
     const delay = (props.delay || 0) + 50;
@@ -36,15 +36,14 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
         setTop((scrollHeight - height) * percent);
       };
     }, delay);
-  }, [clientHeight, scrollHeight, height]);
+  }, [clientHeight, scrollHeight, height, opacity]);
 
   return (
     <div
       ref={ref}
       className={props.className}
       style={{ height, top, opacity }}
-    >
-    </div>
+    />
   );
 };
 
@@ -56,6 +55,6 @@ export default styled(Default)`
   width: 8px;
   border-radius: 4px;
 
-  background: #ccc;
+  background: rgba(0,0,0, 0.3);
   transition: opacity 0.3s;
 `;
