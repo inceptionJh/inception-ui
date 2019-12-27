@@ -4,35 +4,25 @@ import styled from "styled-components";
 
 import { IDefaultScrollBarProps } from "./type";
 
-const DefaultScrollBar: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
-  const ref = React.useRef() as React.RefObject<HTMLDivElement>;
+const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
+  const ref = React.useRef({ parentElement: { clientHeight: 0, scrollHeight: 0 } }) as React.RefObject<HTMLDivElement>;
+  const container = ref.current?.parentElement!;
+
+  const clientHeight = container.clientHeight;
+  const scrollHeight = container.scrollHeight;
 
   const [height, setHeight] = React.useState(0);
   const [top, setTop] = React.useState(0);
-  const [hover, setHover] = React.useState(false);
 
   React.useEffect(() => {
-    ref.current?.parentElement!.onmouseover = () => setHover(true);
-    ref.current?.parentElement!.onmouseout = () => setHover(false);
-  }, []);
-
-  React.useEffect(() => {
-    const delay = (props.delay || 0) + 50;
-    setTimeout(() => {
-      const clientHeight = ref.current?.parentElement?.clientHeight ?? 0;
-      const scrollHeight = ref.current?.parentElement?.scrollHeight ?? 0;
-      setHeight(clientHeight / scrollHeight * clientHeight);
-    }, delay);
-  }, [ref.current?.parentElement]);
+    const delay = (props.delay ?? 0) + 50;
+    const h = clientHeight / scrollHeight * clientHeight;
+    setTimeout(() => setHeight(isNaN(h) ? 0 : h), delay);
+  }, [clientHeight, scrollHeight]);
 
   React.useEffect(() => {
     const delay = (props.delay || 0) + 50;
     setTimeout(() => {
-      const container = ref.current?.parentElement!;
-
-      const clientHeight = container.clientHeight ?? 0;
-      const scrollHeight = container.scrollHeight ?? 0;
-
       container.onscroll = () => {
         const percent = container.scrollTop / (scrollHeight - clientHeight);
 
@@ -40,19 +30,19 @@ const DefaultScrollBar: React.FunctionComponent<IDefaultScrollBarProps> = (props
         setTop((scrollHeight - height) * percent);
       };
     }, delay);
-  }, [ref.current?.parentElement]);
+  }, [clientHeight, scrollHeight, height]);
 
   return (
     <div
       ref={ref}
       className={props.className}
-      style={{ height: `${height}px`, top: `${top}px`, opacity: hover ? 1 : 1 }}
+      style={{ height, top }}
     >
     </div>
   );
 };
 
-export default styled(DefaultScrollBar)`
+export default styled(Default)`
   position: absolute;
   top: 0;
   right: 0;
@@ -61,5 +51,4 @@ export default styled(DefaultScrollBar)`
   border-radius: 4px;
 
   background: #ccc;
-  transition: opacity 0.3s;
 `;

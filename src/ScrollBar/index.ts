@@ -1,7 +1,7 @@
-import DefaultScrollBar from "./Default";
+import Default from "./Default";
 
 const ScrollBar = {
-  Default: DefaultScrollBar,
+  Default,
 };
 
 export default ScrollBar;
