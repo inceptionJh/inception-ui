@@ -29,11 +29,12 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
   React.useEffect(() => {
     const delay = (props.delay || 0) + 50;
     setTimeout(() => {
-      container.onscroll = () => {
+      container.onscroll = (e) => {
         const percent = container.scrollTop / (scrollHeight - clientHeight);
 
         if ((scrollHeight - height) * percent - 1 >= scrollHeight - height) return;
         setTop((scrollHeight - height) * percent);
+        props.onScroll ?? props.onScroll!(e);
       };
     }, delay);
   }, [clientHeight, scrollHeight, height, opacity]);
