@@ -11,8 +11,7 @@ const _Test: React.FunctionComponent<{ className?: string }> = (props) => {
   return (
     <div className={props.className}>
       <div className="parent">
-        <div className="child"></div>
-        <div className="child"></div>
+        {Array(100).fill(null).map((v, i) => <div className="child" />)}
         <ScrollBar />
       </div>
     </div>
@@ -28,7 +27,7 @@ const Test = styled(_Test)`
 
   .parent {
     position: relative;
-    width: 100px;
+    width: 500px;
     height: 200px;
     overflow: auto;
     -ms-overflow-style: none;
