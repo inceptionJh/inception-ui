@@ -16,8 +16,8 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
   const [opacity, setOpacity] = React.useState(0);
 
   React.useEffect(() => {
-    container.onmouseover = () => setOpacity(1);
-    container.onmouseout = () => setOpacity(0);
+    container.onmouseenter = () => setOpacity(1);
+    container.onmouseleave = () => setOpacity(0);
   }, [container]);
 
   React.useEffect(() => {
@@ -42,7 +42,7 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
     <div
       ref={ref}
       className={props.className}
-      style={{ height, top, opacity }}
+      style={{ height, transform: `translate(0, ${top}px)`, opacity }}
     />
   );
 };
@@ -50,6 +50,7 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
 export default styled(Default)`
   position: absolute;
   top: 0;
+  transform: translate(0, 0);
   right: 0;
 
   width: 8px;
