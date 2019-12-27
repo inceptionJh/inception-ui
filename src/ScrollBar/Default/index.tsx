@@ -16,7 +16,7 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
   const [opacity, setOpacity] = React.useState(0);
 
   React.useEffect(() => {
-    container.onmouseenter = () => setOpacity(1);
+    container.onmousemove = () => setOpacity(1);
     container.onmouseleave = () => setOpacity(0);
   }, [container]);
 
