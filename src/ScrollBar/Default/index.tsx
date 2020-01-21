@@ -39,11 +39,13 @@ const Default: React.FunctionComponent<IDefaultScrollBarProps> = (props) => {
     }, delay);
   }, [clientHeight, scrollHeight, height, opacity]);
 
+  const isWindow = React.useMemo(() => navigator.userAgent.toUpperCase().indexOf("WIN") !== -1, []);
+
   return (
     <div
       ref={ref}
       className={props.className}
-      style={{ height, transform: `translate(0, ${top}px)`, opacity }}
+      style={{ display: isWindow ? "initial" : "none", height, transform: `translate(0, ${top}px)`, opacity }}
     />
   );
 };
